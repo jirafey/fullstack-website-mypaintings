@@ -1,1 +1,1 @@
-# myp-intings
+# myp@intings
