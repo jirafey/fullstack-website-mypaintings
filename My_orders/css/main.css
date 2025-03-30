@@ -99,4 +99,22 @@ header{
     margin-top: 5%;
     font-size: calc(2vmin - 5px);
 }
+p {
+	margin-bottom: 0;
+}
 
+.lightblue {
+	color: #349CE5;
+}
+
+.lightgreen {
+	color: #26BD26;
+}
+
+.yellow-orange {
+	color: #E4A711;
+}
+
+.warning-red {
+	color: #FB3736;
+]

@@ -4,39 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>myp@intings</title>
-
     <link rel="icon" type="image/png" href="assets/images/favicon_temp.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
+    <!-- Header -->
     <header class="row">
-        <div class = "logo col-md-2 offset-md-1">
+        <div class="logo col-md-2 offset-md-1">
             <img src="assets/images/favicon_temp.png" width="48" height="48" alt="mp">
             <a class="header-text text-black" href="">myp@intings</a>
         </div>
-        <div class = "nav-bar col-md-8">
-        <a href="" class="header-text text-black me-3">My orders</a>
-        <button class="btn">
-        <img src="assets/images/pfp.png" width="80" height="80" alt="pfp">
-        </button>
-	</div>
+        <!-- Right side of the header -->
+        <div class="nav-bar col-md-8">
+            <a href="" class="header-text text-white me-3">My orders</a>
+            <button class="btn">
+                <img src="assets/images/pfp.png" width="60" height="60" alt="pfp">
+            </button>
+        </div>
     </header>
 
-    <div class="row">
-        <div class="col-md-4 offset-md-1">
-            <img src="assets/images/img.png" alt="Art Image" class="img-fluid" style="max-width: 80%;">
+    <!-- Page Title -->
+    <div class="d-flex align-items-center justify-content-center" style="height: 100px;">
+        <h1>My orders</h1>
+    </div>
+
+    <!-- Orders Container -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Item 1 -->
+            <div class="col-md-6 d-flex align-items-center mb-4 order-item">
+                <div class="me-3">
+                    <img src="assets/images/img.png" class="img-fluid rounded" style="max-height: 150px;" alt="Artwork">
+                </div>
+                <div class="col-md-9">
+                    <p><strong>Bought on:</strong> 2024-12-11</p>
+                    <p><strong>Price:</strong> $650</p>
+                    <p><strong>Hotel:</strong> <span class="lightblue">@Hotel Lord</span></p>
+                    <p><strong>Status:</strong> <span class="warning-red">Waiting for payment (reception)</span></p>
+                </div>
+            </div>
+            
+            <!-- Item 2 -->
+            <div class="col-md-6 d-flex align-items-center mb-4 order-item">
+                <div class="me-3">
+                    <img src="assets/images/img.png" class="img-fluid rounded" style="max-height: 150px;" alt="Artwork">
+                </div>
+                <div class="col-md-9">
+                    <p><strong>Bought on:</strong> 2024-12-11</p>
+                    <p><strong>Price:</strong> $650</p>
+                    <p><strong>Hotel:</strong> <span class="lightblue">@Hotel Gryf</span></p>
+                    <p><strong>Status:</strong> <span class="yellow-orange">Waiting to be sent</span></p>
+                </div>
+            </div>
+            
+            <!-- Item 3 -->
+            <div class="col-md-6 d-flex align-items-center mb-4 order-item">
+                <div class="me-3">
+                    <img src="assets/images/img.png" class="img-fluid rounded" style="max-height: 150px;" alt="Artwork">
+                </div>
+                <div class="col-md-9">
+                    <p><strong>Bought on:</strong> 2024-11-11</p>
+                    <p><strong>Price:</strong> $740</p>
+                    <p><strong>Hotel:</strong> <span class="lightblue">@Hotel Grand Focus</span></p>
+                    <p><strong>Status:</strong> <span class="lightgreen">Sent by hotel</span></p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="d-flex justify-content-center">
-	    <h1>"My orders"</h1>
+
+    <!-- Footer -->
+    <div class="footer w-100">
+        <p class="text-black footer-text">
+            myp@intings © 2024 | 
+            <a href="#" class="text-black footer-text">Support</a> | 
+            <a href="#" class="text-black footer-text">Terms of use</a> | 
+            <a href="#" class="text-black footer-text">Privacy policy</a> | 
+            <a href="#" class="text-black footer-text">Cookie policy</a> | 
+            <a href="#" class="text-black footer-text">Copyrights policy</a>
+        </p>
     </div>
-<div class="footer w-100">
-    <p class="text-black footer-text">myp@intings © 2024 | <a href="#" class="text-black footer-text">Support</a> | <a href="#" class="text-black footer-text">Terms of use</a> | <a href="#" class="text-black footer-text">Privacy policy</a> | <a href="#" class="text-black footer-text">Cookie policy</a> | <a href="#" class="text-black footer-text">Copyrights policy</a> </p>
-</div>
 </body>
 </html>
-
