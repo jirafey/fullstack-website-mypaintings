@@ -1,0 +1,46 @@
+{
+  "zamowienia": [
+    {
+      "bought_on": "2025-04-02",
+      "price": "$650",
+      "hotel": "@Hotel Lord",
+      "status": "Waiting for payment (reception)",
+      "image_url": "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/6dee4724778687.56339ecb1b830.png"
+    },
+    {
+      "bought_on": "2025-04-01",
+      "price": "$480",
+      "hotel": "@Grand Plaza",
+      "status": "Confirmed",
+      "image_url": "https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/beer-peter-black.jpg"
+    },
+    {
+      "bought_on": "2025-03-28",
+      "price": "$720",
+      "hotel": "@Ocean View Resort",
+      "status": "Waiting to be sent",
+      "image_url": "https://i.ebayimg.com/00/s/MTYwMFgxMjAw/z/bjgAAOSwSPdkJdNe/$_57.PNG?set_id=880000500F"
+    },
+    {
+      "bought_on": "2024-12-22",
+      "price": "$550",
+      "hotel": "@Mountain Retreat",
+      "status": "Sent by the hotel",
+      "image_url": "https://www.paintingtogogh.com/cdn/shop/products/EvergreenForest_product_720x.jpg?v=1635277227"
+    },
+    {
+      "bought_on": "2024-12-11",
+      "price": "$890",
+      "hotel": "@Luxury Palace",
+      "status": "Confirmed",
+      "image_url": "https://d35l77wxi0xou3.cloudfront.net/opencart/image/productFromFeb2020/Luxury%20Painting%201608125094-600x600.jpeg"
+    },
+    {
+      "bought_on": "2024-11-11",
+      "price": "$999",
+      "hotel": "@Ocean View Resort",
+      "status": "Confirmed",
+      "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdiDFjojqaTLYEO7SZ2cxJC6j_4pVFDgkWrg&s"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
+html,  body {
+    height: 100%;
+}
+
 body {
     background: #F4F2EE;
-    overflow: hidden;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: 'Abel', sans-serif;
@@ -17,6 +19,35 @@ header{
     font-size: calc(10px + 2vmin);
 }
 
+.header-text, .footer-text {
+    text-decoration: none;
+}
+
+footer {
+    background-color: #349CE5;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    bottom: 0;
+    font-size: calc(2vmin);
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+.logo{
+    text-align: left;
+}
+
+.nav-bar{
+    text-align: right;
+}
+
+.headline{
+    padding: 1vh 0;
+}
+
 .stats, .btns{
     display: flex;
     flex-direction: column;
@@ -24,8 +55,6 @@ header{
     height: 100%;
     text-align: center;
 }
-
-
 
 .sign-up-btn{
     background-color: #349CE5;
@@ -37,22 +66,9 @@ header{
     font-size: calc(10px + 2vmin);
 }
 
-    .btn-google {
+.btn-google {
     background-color: #F4F2EE;
     color: #181818;
-}
-
-.logo{
-    text-align: left;
-}
-
-.nav-bar{
-    text-align: right;
-}
-
-
-.headline{
-    padding: 1vh 0;
 }
 
 .btn-login{
@@ -62,41 +78,11 @@ header{
     font-size: calc(10px + 2vmin);
 }
 
-.header-text, .footer-text {
-    text-decoration: none;
-}
-
-.hero {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-grow: 1;
-}
-.footer {
-    background-color: #349CE5;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    height: 5vh;
-    font-size: calc(2vmin);
-}
-
-
-.btn-primary {
-    background-color: #349CE5;
-    border: none;
-    padding: 10px 20px;
-}
-
-.row{
-    padding: 1%;
-}
-
 .disclaimer-text{
     margin-top: 5%;
     font-size: calc(2vmin - 5px);
 }
 
+.row{
+    padding: 1%;
+}
