@@ -1,0 +1,118 @@
+/* AddArtworkForm.css */
+
+/* Apply Abel font globally or to the specific component */
+/* UWAGA: Font Abel jest już w src/index.css, tutaj nie trzeba */
+.app-container {
+  font-family: 'Abel', sans-serif; /* Można zostawić dla pewności */
+  background-color: #eeeeee;
+  letter-spacing: normal;
+  display: flex; /* Dodano, aby app-container działał jak główny kontener flex */
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header, .app-footer {
+  background-color: #349CE5;
+  color: #333;
+  padding: 0.8rem 1rem;
+}
+
+.app-header {
+    min-height: 60px;
+    display: flex; /* Upewnij się, że header jest flex container */
+    align-items: center; /* Wyśrodkuj elementy pionowo */
+}
+
+.app-footer {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  margin-top: auto; /* Przyklej stopkę do dołu */
+}
+
+.header-title {
+  color: black;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: none;
+  margin-right: auto; /* Wypchnij nawigację w prawo (jeśli logo jest pierwsze) */
+}
+/* Jeśli chcesz logo po lewej i nawigację po prawej, użyj flexbox w App.js/AddArtworkForm.js */
+
+
+.main-nav {
+    margin-left: auto; /* Wypycha nav w prawo */
+}
+
+.main-nav .nav-link {
+  color: #f0f0f0;
+  padding: 0.5rem 1rem;
+  margin: 0 0.2rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none; /* Usuń podkreślenie linków */
+}
+
+.main-nav .nav-link.active {
+  color: white;
+  font-weight: bold;
+  border-bottom: 2px solid white;
+}
+
+.main-nav .nav-link:hover {
+  color: white;
+}
+
+.profile-icon {
+    margin-left: 1rem; /* Dodaj odstęp od nawigacji */
+}
+
+.profile-icon .btn i {
+    color: black;
+}
+
+.app-footer span, .app-footer .footer-link {
+  color: black;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.app-footer .footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Form Styles */
+.form-label-sm {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0.2rem;
+}
+
+.form-control-sm, .form-select-sm, .input-group-sm > .form-control, .input-group-sm > .input-group-text {
+    font-size: 0.85rem;
+    border-radius: 0.2rem;
+    border-color: #ced4da;
+}
+
+input.form-control-sm, textarea.form-control-sm, select.form-select-sm {
+     border: 1px solid #bbb;
+     box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+
+/* Make description textarea take available height */
+.h-100 { height: 100%; }
+.d-flex.flex-column { display: flex; flex-direction: column; }
+.flex-grow-1 { flex-grow: 1; }
+
+/* Image Preview Styling */
+.image-preview-box {
+    background-color: #f8f9fa;
+}
+
+/* Token Section */
+.token-section {
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}

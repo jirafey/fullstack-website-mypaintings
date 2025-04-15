@@ -1,0 +1,8 @@
+.App {
+  text-align: center; /* Domyślny styl z Create React App, możesz zmienić */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Aby App zajmował całą wysokość */
+}
+
+/* Możesz tu dodać style np. dla głównego kontenera, jeśli potrzeba */

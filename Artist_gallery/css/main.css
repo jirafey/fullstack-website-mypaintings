@@ -1,0 +1,49 @@
+html,  body {
+    height: 100%;
+}
+
+body {
+    background: #F4F2EE;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Abel', sans-serif;
+    letter-spacing: 0.3vh;
+}
+
+header{
+    background-color: #349CE5;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    font-size: calc(10px + 2vmin);
+}
+
+.header-text, .footer-text {
+    text-decoration: none;
+}
+
+footer {
+    background-color: #349CE5;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    bottom: 0;
+    font-size: calc(2vmin);
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+.logo{
+    text-align: left;
+}
+
+.nav-bar{
+    text-align: right;
+}
+
+p {
+    margin-bottom: 0;
+}
