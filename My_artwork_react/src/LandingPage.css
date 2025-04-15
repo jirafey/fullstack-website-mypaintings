@@ -1,0 +1,102 @@
+/* LandingPage.css */
+
+.landing-page-content .headline {
+  padding: 1vh 0;
+  color: #333; /* Ciemniejszy tekst dla lepszego kontrastu */
+  font-weight: 300; /* Lżejszy font dla nagłówków */
+}
+
+.landing-page-content .display-4.headline {
+    font-size: calc(1.5rem + 2vw); /* Responsywny rozmiar */
+    margin-bottom: 0.5rem;
+}
+.landing-page-content .display-7.headline {
+    font-size: calc(1rem + 0.8vw); /* Responsywny rozmiar */
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+
+.landing-page-content .stats,
+.landing-page-content .btns {
+  /* Flexbox i centrowanie już są przez align-items-center w wierszu */
+  text-align: center;
+  padding: 1rem 0; /* Dodano padding pionowy */
+}
+
+.landing-page-content .stats h1 {
+    color: #349CE5; /* Niebieski kolor dla liczb */
+    margin-bottom: 0;
+}
+.landing-page-content .stats h4 {
+    color: #6c757d; /* Szary kolor dla opisów */
+    font-size: calc(0.8rem + 0.5vw);
+    margin-bottom: 1.5rem; /* Odstęp pod opisem */
+}
+
+.landing-page-content .btns h1 {
+    font-size: calc(1.3rem + 1.5vw); /* Responsywny rozmiar */
+    color: #333;
+}
+
+.landing-page-content .sign-up-btn {
+  background-color: #349CE5;
+  border: 1px solid #2a8cd1; /* Ciemniejszy niebieski border */
+  border-radius: 50px; /* Bardziej zaokrąglone */
+  padding: 10px 20px; /* Większy padding */
+  color: #ffffff; /* Biały tekst */
+  font-size: calc(0.9rem + 0.5vw); /* Responsywny font */
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.landing-page-content .sign-up-btn:hover {
+    background-color: #2a8cd1;
+    transform: translateY(-1px); /* Lekkie podniesienie przycisku */
+}
+
+
+.landing-page-content .btn-google {
+  background-color: #ffffff; /* Białe tło */
+  color: #444; /* Ciemniejszy szary tekst */
+  border-color: #ccc;
+}
+.landing-page-content .btn-google:hover {
+    background-color: #f8f9fa; /* Lekko szare tło przy najechaniu */
+     border-color: #bbb;
+}
+
+.landing-page-content .google-icon {
+    vertical-align: middle; /* Lepsze wyrównanie ikonki */
+    margin-bottom: 2px; /* Drobna korekta pozycji */
+}
+
+.landing-page-content .disclaimer-text {
+  margin-top: 1.5rem; /* Zwiększono odstęp */
+  font-size: 0.75rem; /* Mniejszy tekst */
+  color: #6c757d;
+}
+
+.landing-page-content .row {
+  padding: 1% 0; /* Usunięto padding boczny, kontener go ma */
+}
+
+.landing-image {
+    max-width: 80%; /* Zmniejszono, aby pasowało do layoutu */
+    height: auto;
+    display: block; /* Usuwa dodatkowe miejsce pod obrazkiem */
+    margin-left: auto; /* Centrowanie na małych ekranach */
+    margin-right: auto; /* Centrowanie na małych ekranach */
+}
+
+@media (min-width: 768px) {
+    .landing-image {
+        margin-left: 0; /* Wyrównanie do lewej na większych */
+        max-width: 100%; /* Pełna szerokość w kolumnie */
+    }
+     .landing-page-content .btns {
+        text-align: left; /* Wyrównanie do lewej */
+     }
+     .landing-page-content .disclaimer-text {
+        text-align: left;
+     }
+}
