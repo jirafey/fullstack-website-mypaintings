@@ -1,8 +1,37 @@
-.App {
-  text-align: center; /* Domyślny styl z Create React App, możesz zmienić */
+/* App.css */
+.app-container {
+  /* font-family ustawiony globalnie w index.css */
+  background-color: #eeeeee;
+  letter-spacing: normal;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Aby App zajmował całą wysokość */
+  min-height: 100vh;
 }
 
-/* Możesz tu dodać style np. dla głównego kontenera, jeśli potrzeba */
+.app-header, .app-footer {
+  background-color: #349CE5; /* Niebieski */
+  color: #333;
+  padding: 0.8rem 1rem;
+}
+
+.app-header { min-height: 60px; display: flex; align-items: center; }
+.app-footer { padding: 0.6rem 1rem; font-size: 0.85rem; margin-top: auto; /* Przyklej stopkę */ }
+.header-title { color: black; font-weight: bold; font-size: 1.5rem; text-decoration: none; }
+.main-nav { margin-left: auto; }
+.main-nav .nav-link { color: #f0f0f0; padding: 0.5rem 1rem; margin: 0 0.2rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s ease; border-bottom: 2px solid transparent; }
+.main-nav .nav-link.active { color: white; font-weight: bold; border-bottom: 2px solid white; }
+.main-nav .nav-link:hover { color: white; }
+.profile-icon { margin-left: 1rem; }
+.profile-icon .btn img { border: 1px solid #eee; /* Lekka ramka dla pfp */ }
+.app-footer span, .app-footer .footer-link { color: black; text-decoration: none; margin: 0 0.5rem; }
+.app-footer .footer-link:hover { text-decoration: underline; }
+
+main.container { padding-top: 1rem; padding-bottom: 2rem; }
+
+/* Style dla tymczasowych widoków */
+.placeholder-page {
+    border: 2px dashed #ccc;
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}

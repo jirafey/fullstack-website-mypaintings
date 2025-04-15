@@ -1,0 +1,73 @@
+/* MyOrders.css */
+
+.page-title-orders {
+  /* Możesz użyć tych samych stylów co .page-title lub innych */
+  font-weight: bold;
+  margin-bottom: 1.5rem !important;
+}
+
+.order-item {
+    background-color: #f8f9fa;
+    transition: box-shadow 0.2s ease-in-out;
+    border-radius: 0.375rem; /* Standardowe zaokrąglenie Bootstrapa */
+}
+
+.order-item:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.10)!important;
+}
+
+.order-item p {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.order-item p strong {
+    color: #555;
+}
+
+.order-image img {
+    border: 1px solid #dee2e6;
+}
+
+.hotel-link { /* Taka sama klasa jak w MyArtwork.css */
+    color: #349CE5;
+    font-weight: bold;
+}
+
+/* Style dla statusu zamówienia */
+.status-label {
+    font-weight: bold;
+    padding: 0.2em 0.6em;
+    border-radius: 0.25rem;
+    font-size: 0.8em;
+    display: inline-block; /* Aby tło objęło tekst */
+}
+
+.status-waiting-payment { color: white; background-color: #dc3545; } /* Czerwony */
+.status-waiting-sent { color: black; background-color: #ffc107; } /* Żółty/Pomarańczowy */
+.status-sent { color: white; background-color: #198754; }        /* Zielony */
+.status-confirmed { color: white; background-color: #0d6efd; }   /* Niebieski */
+.status-unknown { color: #6c757d; background-color: #e9ecef; } /* Szary */
+
+
+/* Poprawki dla małych ekranów */
+@media (max-width: 767.98px) {
+    .order-item {
+        flex-direction: column;
+        align-items: center;
+    }
+    .order-image {
+        margin-right: 0 !important;
+        margin-bottom: 1rem;
+        width: 60%;
+    }
+    .order-image img {
+        width: 100%;
+        height: auto;
+    }
+    .order-details {
+        width: 100%;
+        text-align: center;
+    }
+}

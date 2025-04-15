@@ -1,3 +1,6 @@
+/* Importuj font Abel */
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,7 +8,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eeeeee; /* Globalny kolor tła, jeśli potrzebny */
+  background-color: #eeeeee; /* Globalne tło */
+}
+
+/* Ustawienie domyślnego fontu dla całej aplikacji */
+body, #root, .App, .app-container {
+  font-family: 'Abel', sans-serif;
 }
 
 code {
@@ -13,11 +21,8 @@ code {
     monospace;
 }
 
-/* Importuj font Abel tutaj */
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-
-/* Możesz tu dodać inne globalne style, jeśli potrzebujesz */
-body, #root, .App {
+/* Podstawowe ustawienie dla layoutu flex */
+#root, .App, .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
