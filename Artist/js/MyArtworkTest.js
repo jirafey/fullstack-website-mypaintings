@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("click", function () {
     const artwork = document.querySelector(".artwork");
     const loadArtworkButton = document.getElementById("loadArtwork");
 

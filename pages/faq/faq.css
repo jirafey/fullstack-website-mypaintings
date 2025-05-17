@@ -1,0 +1,144 @@
+html,  body {
+    height: 100%;
+}
+
+body {
+    background: #F4F2EE;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Abel', sans-serif;
+        letter-spacing: 0.3vh;
+}
+
+header{
+    background-color: #349CE5;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    font-size: calc(10px + 2vmin);
+}
+
+.header-text, .footer-text {
+    text-decoration: none;
+}
+
+footer {
+    background-color: #349CE5;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    bottom: 0;
+    font-size: calc(2vmin);
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+.logo{
+    text-align: left;
+}
+
+.nav-bar{
+    text-align: right;
+}
+
+.headline{
+    padding: 1vh 0;
+}
+
+.name{
+    color: #349CE5;
+}
+
+.name, .slogan{
+    text-align: center;
+}
+
+.headline-line {
+    color: #349CE5;
+    margin: 70px;
+}
+
+.stats, .btns{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
+
+.sign-up-btn{
+    background-color: #349CE5;
+    border: 1px solid #181818;
+    border-radius: 40px;
+    padding: 5px 20px;
+    height: 15%;
+    color: #F4F2EE;
+    font-size: calc(10px + 2vmin);
+}
+
+.btn-google {
+    background-color: #F4F2EE;
+    color: #181818;
+}
+
+.btn-login{
+    background-color: #F4F2EE;
+    border-radius: 40px;
+    padding: 5px 20px;
+    font-size: calc(10px + 2vmin);
+}
+
+.disclaimer-text{
+    margin-top: 5%;
+    font-size: calc(2vmin - 5px);
+}
+
+.row{
+    padding: 1%;
+    text-align: center;
+}
+
+.faq-container{
+    text-align: center;
+    margin: auto;
+    max-width: 50%;
+}
+
+
+.faq-item {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.arrow {
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #444;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 100px;
+}
+
+.faq-item.open .arrow {
+    transform: rotate(90deg);
+}
