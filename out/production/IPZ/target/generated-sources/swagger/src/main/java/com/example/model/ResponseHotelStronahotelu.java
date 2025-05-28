@@ -1,0 +1,103 @@
+package com.example.model;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * ResponseHotelStronahotelu
+ */
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-04-01T20:32:28.347647700+02:00[Europe/Warsaw]")
+
+
+public class ResponseHotelStronahotelu   {
+  @JsonProperty("message")
+  private String message = null;
+
+  @JsonProperty("website_url")
+  private String websiteUrl = null;
+
+  public ResponseHotelStronahotelu message(String message) {
+    this.message = message;
+    return this;
+  }
+
+  /**
+   * Get message
+   * @return message
+   **/
+  @Schema(example = "Link do strony hotelu został zapisany.", description = "")
+  
+    public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public ResponseHotelStronahotelu websiteUrl(String websiteUrl) {
+    this.websiteUrl = websiteUrl;
+    return this;
+  }
+
+  /**
+   * Get websiteUrl
+   * @return websiteUrl
+   **/
+  @Schema(example = "https://www.example-hotel.com", description = "")
+  
+    public String getWebsiteUrl() {
+    return websiteUrl;
+  }
+
+  public void setWebsiteUrl(String websiteUrl) {
+    this.websiteUrl = websiteUrl;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ResponseHotelStronahotelu responseHotelStronahotelu = (ResponseHotelStronahotelu) o;
+    return Objects.equals(this.message, responseHotelStronahotelu.message) &&
+        Objects.equals(this.websiteUrl, responseHotelStronahotelu.websiteUrl);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(message, websiteUrl);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ResponseHotelStronahotelu {\n");
+    
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    websiteUrl: ").append(toIndentedString(websiteUrl)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}

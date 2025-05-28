@@ -1,0 +1,1251 @@
+openapi: 3.0.0
+info:
+  title: MyP@intings
+  version: 1.0.0
+  description: RESTful API dla aplikacji myp@intings
+tags:
+  - name: Ogolne
+    description: Operacje Ogolne i pomocnicze
+  - name: Gosc
+    description: Operacje związane z Goscmi
+  - name: Hotel
+    description: Operacje związane z hotelem
+  - name: Artysta
+    description: Operacje związane z artystami
+  - name: Wiadomosci
+    description: Operacje związane z dm
+paths:
+
+  /hotel/confirm-delivery/{image_id}:
+    post:
+      tags:
+        - Hotel
+      summary: Potwierdź dostarczenie obrazu
+      description: Endpoint pozwala hotelowi potwierdzić dostarczenie obrazu.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          required: true
+          description: ID obrazu
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Dostarczenie potwierdzone pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_confirm_delivery'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /hotel/generate-qr/{image_id}:
+    post:
+      tags:
+        - Hotel
+      summary: Wygeneruj kod QR dla obrazu
+      description: Endpoint generuje kod QR dla danego obrazu i zwraca link do tego kodu QR.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          required: true
+          description: ID obrazu
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Kod QR został wygenerowany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_generate_qr'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+
+
+
+  /ogolne/avatar/{id}:
+    get:
+      tags:
+        - Ogolne
+      summary: Pobierz link do awataru użytkownika
+      description: Endpoint zwraca link do obrazu awataru użytkownika o podanym ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID użytkownika
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_avatar_get'
+        '404':
+          description: Użytkownik nie znaleziony
+
+  /gosc/reserve:
+    post:
+      tags:
+        - Gosc
+      summary: Zarezerwuj obraz (Gosc)
+      description: Endpoint pozwala gościowi zarezerwować obraz.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_gosc_reserve'
+      responses:
+        '200':
+          description: Rezerwacja zakończona sukcesem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_gosc_reserve'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /gosc/zamowienia:
+    get:
+      tags:
+        - Gosc
+      summary: Pobierz listę zamówień gościa
+      description: Endpoint zwraca listę zamówień danego gościa. Wymaga tokenu JWT.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_gosc_zamowienia'
+        '401':
+          description: Brak autoryzacji
+        '403':
+          description: Brak dostępu
+
+
+  /hotel/feed:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz feed hotelu
+      description: Endpoint zwraca feed hotelu, czyli tablicę linków do obrazów wraz z nickiem artysty i linkiem do jego awatara.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_feed'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /hotel/reservations:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz listę zarezerwowanych dzieł
+      description: Endpoint zwraca listę zarezerwowanych dzieł wraz z danymi rezerwacji i linkiem do zdjęcia.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_reservations'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+
+  /hotel/deliveries:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz listę dostaw dla hotelu
+      description: Endpoint zwraca listę dostaw dla hotelu wraz z adresami zasobów zdjęć.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_deliveries'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/getconversations:
+    get:
+      tags:
+        - Wiadomosci
+      summary: Pobierz listę konwersacji
+      description: Endpoint zwraca listę konwersacji z podstawowymi informacjami (URL awatara, ID użytkownika i ID transakcji)
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_getconversations'
+        '401':
+          description: Brak autoryzacji
+
+
+  /hotel/stronaartysty/{artist_id}:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz dzieła artysty z informacją o polubieniach
+      description: Endpoint zwraca tablicę dzieł danego artysty z URL obrazów i informacją czy hotel je polubił
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: artist_id
+          in: path
+          description: ID artysty
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_stronaartysty'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Artysta nie znaleziony
+
+  /ogolne/avatar:
+    put:
+      tags:
+        - Ogolne
+      summary: Zaktualizuj link do awatara użytkownika
+      description: Endpoint pozwala zalogowanemu użytkownikowi zaktualizować link do swojego awatara.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_avatar_update'
+      responses:
+        '200':
+          description: Awatar został zaktualizowany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_avatar_update'
+        '400':
+          description: Nieprawidłowy URL
+        '401':
+          description: Brak autoryzacji
+
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    # Responses
+    response_hotel_confirm_delivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dostarczenie obrazu zostało potwierdzone."
+
+    response_hotel_generate_qr:
+      type: object
+      properties:
+        qr_code_url:
+          type: string
+          example: "https://example.com/qr-codes/image_123.png"
+
+    response_hotel_sell:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Obraz został oznaczony jako sprzedany."
+
+    response_hotel_artysta_follow:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Follow został dodany."
+
+    response_hotel_artysta_unfollow:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Follow został usunięty."
+
+    response_wiadomosci_reservepainting:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prośba o rezerwację została wysłana."
+
+    response_wiadomosci_acceptreservation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Rezerwacja została zaakceptowana."
+
+    response_wiadomosci_finalizeprocess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Proces rezerwacji został zakończony."
+
+    response_wiadomosci_cancelreservation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Rezerwacja została anulowana."
+
+    response_wiadomosci_requestdelivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Żądanie dostawy zostało wysłane."
+
+    response_wiadomosci_acceptdelivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dostawa została zaakceptowana."
+
+    response_wiadomosci_confirmdelivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dostawa została potwierdzona."
+
+    response_ogolne_logowanie:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    response_ogolne_rejestracja:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: "jan.kowalski@example.com"
+        login:
+          type: string
+          example: "jan_kowalski"
+        typ_uzytkownika:
+          type: string
+          example: "gosc"
+
+    response_ogolne_support_ticket:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Ticket został przyjęty do realizacji."
+
+    response_ogolne_resolver:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 123
+
+    response_ogolne_avatar_get:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          example: "https://example.com/avatars/user123.png"
+
+    response_gosc_reserve:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Obraz został zarezerwowany."
+
+    response_gosc_zamowienia:
+      type: object
+      properties:
+        zamowienia:
+          type: array
+          items:
+            type: object
+            properties:
+              bought_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              price:
+                type: string
+                example: "$650"
+              hotel:
+                type: string
+                example: "@Hotel Lord"
+              status:
+                type: string
+                example: "Waiting for payment (reception)"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_artysta_mojedziela:
+      type: object
+      properties:
+        dziela:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 123
+              date_of_post:
+                type: string
+                format: date
+                example: "2024-11-11"
+              price:
+                type: string
+                example: "$600"
+              hotel:
+                type: string
+                example: "@NY_Hotel_Star"
+              viewers:
+                type: integer
+                example: 59
+              likes:
+                type: integer
+                example: 12
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_artysta_sales:
+      type: object
+      properties:
+        sales:
+          type: array
+          items:
+            type: object
+            properties:
+              sold_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              price:
+                type: string
+                example: "$650"
+              hotel:
+                type: string
+                example: "@GoldenHotelNY"
+              likes:
+                type: integer
+                example: 13
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_hotel_feed:
+      type: object
+      properties:
+        feed:
+          type: array
+          items:
+            type: object
+            properties:
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+              painting_site:
+                type: string
+                example: "https://example.com/image_abc"
+              artist_nick:
+                type: string
+                example: "jan_kowalski"
+              artist_avatar_url:
+                type: string
+                example: "https://example.com/avatars/jan_kowalski.png"
+
+    response_hotel_reservations:
+      type: object
+      properties:
+        reservations:
+          type: array
+          items:
+            type: object
+            properties:
+              reserved_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              buyer:
+                type: string
+                example: "@user2025"
+              dimensions:
+                type: string
+                example: "100cm x 100cm x 10cm"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_artysta_dzielo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Pejzaż górski"
+        dimensions:
+          type: string
+          example: "100x150 cm"
+        price:
+          type: number
+          example: 1200
+        category:
+          type: string
+          example: "Malarstwo"
+        medium:
+          type: string
+          example: "Olej na płótnie"
+        style:
+          type: string
+          example: "Realizm"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        description:
+          type: string
+          example: "Pejzaż przedstawiający góry o zachodzie słońca."
+
+    response_hotel_deliveries:
+      type: object
+      properties:
+        deliveries:
+          type: array
+          items:
+            type: object
+            properties:
+              paid_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              buyer:
+                type: string
+                example: "@user2024"
+              dimensions:
+                type: string
+                example: "100cm x 100cm x 10cm"
+              ship_to:
+                type: object
+                properties:
+                  first_name:
+                    type: string
+                    example: "John"
+                  last_name:
+                    type: string
+                    example: "Smith"
+                  street_address:
+                    type: string
+                    example: "Baker Street 11/2"
+                  city:
+                    type: string
+                    example: "Szczecin"
+                  state_province_region:
+                    type: string
+                    example: "Zachodniopomorskie"
+                  zip_code:
+                    type: string
+                    example: "70-000"
+                  email_address:
+                    type: string
+                    example: "john_smith@example.com"
+                  phone_number:
+                    type: string
+                    example: "+48 123 456 789"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_hotel_add_delivery_info:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Informacje o dostawie zostały dodane do obrazu."
+        delivery_id:
+          type: integer
+          example: 1
+
+    response_hotel_ownedpaintings:
+      type: object
+      properties:
+        paintings:
+          type: array
+          items:
+            type: object
+            properties:
+              taken_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              dimensions:
+                type: string
+                example: "50cm x 100cm x 10cm"
+              artist:
+                type: string
+                example: "@artist2023"
+              status:
+                type: string
+                example: "IN DELIVERY TO YOU"
+              title:
+                type: string
+                example: "Pejzaż górski"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_wiadomosci_getmessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+                example: "Cześć, jak tam Twoje nowe obrazy?"
+              timestamp:
+                type: string
+                format: date-time
+                example: "2024-03-15T14:30:22Z"
+
+    response_wiadomosci_transactionstatus:
+      type: object
+      properties:
+        transaction_id:
+          type: integer
+          example: 123
+        status:
+          type: string
+          enum:
+            - "NOWA"
+            - "W TRAKCIE"
+            - "ZAAKCEPTOWANA"
+            - "ANULOWANA"
+            - "DOSTAWA W TRAKCIE"
+            - "DOSTAWA ZAAKCEPTOWANA"
+            - "ZAKOŃCZONA"
+          example: "W TRAKCIE"
+        last_updated:
+          type: string
+          format: date-time
+          example: "2024-03-15T14:30:22Z"
+
+    response_hotel_artysta_profil:
+      type: object
+      properties:
+        profile_url:
+          type: string
+          example: "https://example.com/artists/123"
+
+    response_ogolne_zmiana_hasla:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Hasło zostało pomyślnie zmienione."
+
+    response_ogolne_dane_dostawy:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dane dostawy zostały zaktualizowane."
+        dane_dostawy:
+          type: object
+          properties:
+            street_address:
+              type: string
+              example: "Baker Street 11/2"
+            city:
+              type: string
+              example: "Szczecin"
+            state_province_region:
+              type: string
+              example: "Zachodniopomorskie"
+            zip_code:
+              type: string
+              example: "70-000"
+            email_address:
+              type: string
+              example: "john_smith@example.com"
+            phone_number:
+              type: string
+              example: "+48 123 456 789"
+
+    response_ogolne_user_nickname:
+      type: object
+      properties:
+        nickname:
+          type: string
+          example: "@jan_kowalski"
+
+    response_hotel_followedartists:
+      type: object
+      properties:
+        artists:
+          type: array
+          items:
+            type: object
+            properties:
+              id_artysty:
+                type: integer
+                example: 123
+
+    response_wiadomosci_latest_timestamps:
+      type: object
+      properties:
+        timestamps:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                example: 123
+              latest_timestamp:
+                type: string
+                format: date-time
+                example: "2024-03-15T14:30:22Z"
+
+    response_hotel_stronahotelu:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Link do strony hotelu został zapisany."
+        website_url:
+          type: string
+          example: "https://www.example-hotel.com"
+
+    response_artysta_stronahotelu:
+      type: object
+      properties:
+        website_url:
+          type: string
+          example: "https://www.example-hotel.com"
+
+    response_wiadomosci_getconversations:
+      type: object
+      properties:
+        conversations:
+          type: array
+          items:
+            type: object
+            properties:
+              avatar_url:
+                type: string
+                example: "https://example.com/avatars/user123.png"
+              user_id:
+                type: integer
+                example: 123
+              id_transaction:
+                type: integer
+                example: 456
+
+    response_hotel_painting_like:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Like został dodany."
+        likes_count:
+          type: integer
+          example: 42
+
+    response_hotel_painting_unlike:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Like został usunięty."
+        likes_count:
+          type: integer
+          example: 41
+
+    response_artysta_dzielo_delete:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dzieło zostało pomyślnie usunięte."
+        deleted_image_id:
+          type: integer
+          example: 123
+
+    response_artysta_dzielo_delete_conflict:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Nie można usunąć dzieła, ponieważ jest już zarezerwowane."
+        current_status:
+          type: string
+          example: "RESERVED"
+
+    response_hotel_stronaobrazu:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Pejzaż górski"
+        dimensions:
+          type: string
+          example: "100x150 cm"
+        price:
+          type: number
+          example: 1200
+        category:
+          type: string
+          example: "Malarstwo"
+        medium:
+          type: string
+          example: "Olej na płótnie"
+        style:
+          type: string
+          example: "Realizm"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        description:
+          type: string
+          example: "Pejzaż przedstawiający góry o zachodzie słońca."
+        artist_id:
+          type: integer
+          example: 456
+        artist_nick:
+          type: string
+          example: "@jan_kowalski"
+        artist_avatar_url:
+          type: string
+          example: "https://example.com/avatars/jan_kowalski.png"
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                example: "https://example.com/images/image1.jpg"
+
+    response_hotel_stronaartysty:
+      type: object
+      properties:
+        artist_info:
+          type: object
+          properties:
+            artist_id:
+              type: integer
+              example: 123
+            nickname:
+              type: string
+              example: "@jan_kowalski"
+            avatar_url:
+              type: string
+              example: "https://example.com/avatars/jan_kowalski.png"
+            is_followed:
+              type: boolean
+              example: true
+        artworks:
+          type: array
+          items:
+            type: object
+            properties:
+              artwork_id:
+                type: integer
+                example: 456
+              image_url:
+                type: string
+                example: "https://example.com/images/pejzaz.jpg"
+              is_liked:
+                type: boolean
+                example: true
+
+    response_wiadomosci_sendmessage:
+      type: object
+      properties:
+        message_id:
+          type: integer
+          example: 789
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-03-20T14:30:22Z"
+        status:
+          type: string
+          example: "SENT"
+
+    response_ogolne_avatar_update:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Link do awatara został zaktualizowany."
+        avatar_url:
+          type: string
+          example: "https://example.com/avatars/new_avatar.jpg"
+
+    # Requests
+    request_ogolne_logowanie:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "jan_kowalski"
+        password:
+          type: string
+          example: "haslo123"
+      required:
+        - username
+        - password
+
+    request_ogolne_rejestracja:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "jan.kowalski@example.com"
+        login:
+          type: string
+          example: "jan_kowalski"
+        haslo:
+          type: string
+          example: "haslo123"
+        typ_uzytkownika:
+          type: string
+          enum:
+            - gosc
+            - artysta
+            - hotel
+          example: "gosc"
+      required:
+        - email
+        - login
+        - haslo
+        - typ_uzytkownika
+
+    request_ogolne_support_ticket:
+      type: object
+      properties:
+        imie_i_nazwisko:
+          type: string
+          example: "Jan Kowalski"
+        email:
+          type: string
+          example: "jan.kowalski@example.com"
+        temat:
+          type: string
+          example: "Problem z rezerwacją"
+        wiadomosc:
+          type: string
+          example: "Nie mogę zalogować się do swojego konta."
+      required:
+        - imie_i_nazwisko
+        - email
+        - temat
+        - wiadomosc
+
+    request_gosc_reserve:
+      type: object
+      properties:
+        image_id:
+          type: integer
+          example: 123
+        buyer_id:
+          type: integer
+          nullable: true
+          example: null
+      required:
+        - image_id
+        - buyer_id
+
+    request_artysta_dzielo:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Pejzaż górski"
+        dimensions:
+          type: string
+          example: "100x150 cm"
+        price:
+          type: number
+          example: 1200
+        category:
+          type: string
+          example: "Malarstwo"
+        medium:
+          type: string
+          example: "Olej na płótnie"
+        style:
+          type: string
+          example: "Realizm"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        description:
+          type: string
+          example: "Pejzaż przedstawiający góry o zachodzie słońca."
+      required:
+        - title
+        - dimensions
+        - price
+        - category
+        - medium
+        - style
+        - date
+        - description
+
+    request_hotel_add_delivery_info:
+      type: object
+      properties:
+        paid_on:
+          type: string
+          format: date
+          example: "2024-12-11"
+        buyer:
+          type: string
+          example: "@user2024"
+        dimensions:
+          type: string
+          example: "100cm x 100cm x 10cm"
+        ship_to:
+          type: object
+          properties:
+            first_name:
+              type: string
+              example: "John"
+            last_name:
+              type: string
+              example: "Smith"
+            street_address:
+              type: string
+              example: "Baker Street 11/2"
+            city:
+              type: string
+              example: "Szczecin"
+            state_province_region:
+              type: string
+              example: "Zachodniopomorskie"
+            zip_code:
+              type: string
+              example: "70-000"
+            email_address:
+              type: string
+              example: "john_smith@example.com"
+            phone_number:
+              type: string
+              example: "+48 123 456 789"
+      required:
+        - paid_on
+        - buyer
+        - dimensions
+        - ship_to
+
+    request_ogolne_zmiana_hasla:
+      type: object
+      properties:
+        stare_haslo:
+          type: string
+          example: "stareHaslo123"
+        nowe_haslo:
+          type: string
+          example: "noweHaslo456"
+      required:
+        - stare_haslo
+        - nowe_haslo
+
+    request_ogolne_dane_dostawy:
+      type: object
+      properties:
+        street_address:
+          type: string
+          example: "Baker Street 11/2"
+        city:
+          type: string
+          example: "Szczecin"
+        state_province_region:
+          type: string
+          example: "Zachodniopomorskie"
+        zip_code:
+          type: string
+          example: "70-000"
+        email_address:
+          type: string
+          example: "john_smith@example.com"
+        phone_number:
+          type: string
+          example: "+48 123 456 789"
+      required:
+        - street_address
+        - city
+        - state_province_region
+        - zip_code
+        - email_address
+        - phone_number
+
+    request_hotel_stronahotelu:
+      type: object
+      properties:
+        website_url:
+          type: string
+          format: uri
+          example: "https://www.example-hotel.com"
+      required:
+        - website_url
+
+    request_wiadomosci_sendmessage:
+      type: object
+      properties:
+        recipient_id:
+          type: integer
+          example: 123
+        content:
+          type: string
+          example: "Czy obraz jest jeszcze dostępny?"
+      required:
+        - recipient_id
+        - content
+
+    request_ogolne_avatar_update:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+          example: "https://example.com/avatars/new_avatar.jpg"
+      required:
+        - avatar_url

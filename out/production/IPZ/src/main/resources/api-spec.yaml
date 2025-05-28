@@ -1,0 +1,2274 @@
+openapi: 3.0.0
+info:
+  title: MyP@intings
+  version: 1.0.0
+  description: RESTful API dla aplikacji myp@intings
+tags:
+  - name: Ogolne
+    description: Operacje Ogolne i pomocnicze
+  - name: Gosc
+    description: Operacje związane z Goscmi
+  - name: Hotel
+    description: Operacje związane z hotelem
+  - name: Artysta
+    description: Operacje związane z artystami
+  - name: Wiadomosci
+    description: Operacje związane z dm
+paths:
+
+  /hotel/confirm-delivery/{image_id}:
+    post:
+      tags:
+        - Hotel
+      summary: Potwierdź dostarczenie obrazu
+      description: Endpoint pozwala hotelowi potwierdzić dostarczenie obrazu.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          required: true
+          description: ID obrazu
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Dostarczenie potwierdzone pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_confirm_delivery'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /hotel/generate-qr/{image_id}:
+    post:
+      tags:
+        - Hotel
+      summary: Wygeneruj kod QR dla obrazu
+      description: Endpoint generuje kod QR dla danego obrazu i zwraca link do tego kodu QR.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          required: true
+          description: ID obrazu
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Kod QR został wygenerowany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_generate_qr'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /hotel/sell/{image_id}:
+    post:
+      tags:
+        - Hotel
+      summary: Oznacz obraz jako sprzedany
+      description: Endpoint pozwala hotelowi oznaczyć obraz o podanym ID jako sprzedany.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          required: true
+          description: ID obrazu
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Obraz został oznaczony jako sprzedany
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_sell'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /hotel/artysta/follow/{id_artysty}:
+    post:
+      tags:
+        - Hotel
+      summary: Dodaj follow dla artysty
+      description: Endpoint pozwala dodać follow dla danego artysty (wywoływane przez hotel).
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: id_artysty
+          in: path
+          description: ID artysty, któremu dodajemy follow
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Follow został dodany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_artysta_follow'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Artysta nie znaleziony
+    delete:
+      tags:
+        - Hotel
+      summary: Usuń follow dla artysty
+      description: Endpoint pozwala usunąć follow dla danego artysty (wywoływane przez hotel).
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: id_artysty
+          in: path
+          description: ID artysty, któremu usuwamy follow
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Follow został usunięty pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_artysta_unfollow'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Artysta nie znaleziony
+
+  /wiadomosci/reservepainting/{idobrazu}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Zarezerwuj obraz
+      description: Endpoint pozwala zarezerwować określony obraz.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idobrazu
+          in: path
+          required: true
+          description: ID obrazu do rezerwacji
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Rezerwacja została wysłana
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_reservepainting'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/acceptreservation/{idrezerwacji}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Zaakceptuj rezerwację
+      description: Endpoint pozwala zaakceptować rezerwację obrazu.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idrezerwacji
+          in: path
+          required: true
+          description: ID rezerwacji do zaakceptowania
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Rezerwacja została zaakceptowana
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_acceptreservation'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/finalizeprocess/{idrezerwacji}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Finalizuj proces rezerwacji
+      description: Endpoint pozwala finalizować proces rezerwacji.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idrezerwacji
+          in: path
+          required: true
+          description: ID rezerwacji do finalizacji
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Proces rezerwacji został zakończony
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_finalizeprocess'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/cancelreservation/{idrezerwacji}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Anuluj rezerwację
+      description: Endpoint pozwala anulować rezerwację.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idrezerwacji
+          in: path
+          required: true
+          description: ID rezerwacji do anulowania
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Rezerwacja została anulowana
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_cancelreservation'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/requestdelivery/{idrezerwacji}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Zażądaj dostawy
+      description: Endpoint pozwala zażądać dostawy dla rezerwacji.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idrezerwacji
+          in: path
+          required: true
+          description: ID rezerwacji dla której żądamy dostawy
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Żądanie dostawy zostało wysłane
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_requestdelivery'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/acceptdelivery/{idrezerwacji}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Zaakceptuj dostawę
+      description: Endpoint pozwala zaakceptować dostawę.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idrezerwacji
+          in: path
+          required: true
+          description: ID rezerwacji dla której akceptujemy dostawę
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Dostawa została zaakceptowana
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_acceptdelivery'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/confirmdelivery/{idrezerwacji}:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Potwierdź dostawę
+      description: Endpoint pozwala potwierdzić dostawę.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idrezerwacji
+          in: path
+          required: true
+          description: ID rezerwacji dla której potwierdzamy dostawę
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Dostawa została potwierdzona
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_confirmdelivery'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /ogolne/logowanie:
+    post:
+      tags:
+        - Ogolne
+      summary: Logowanie użytkownika
+      description: Endpoint do logowania użytkownika do systemu.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_logowanie'
+      responses:
+        '200':
+          description: Logowanie zakończone sukcesem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_logowanie'
+        '401':
+          description: Nieprawidłowe dane logowania
+
+  /ogolne/rejestracja:
+    post:
+      tags:
+        - Ogolne
+      summary: Rejestracja nowego użytkownika
+      description: Endpoint do rejestracji nowego użytkownika w systemu.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_rejestracja'
+      responses:
+        '201':
+          description: Użytkownik został zarejestrowany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_rejestracja'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+
+  /ogolne/support/ticket:
+    post:
+      tags:
+        - Ogolne
+      summary: Wyślij ticket do supportu
+      description: Endpoint do wysyłania zgłoszenia do działu wsparcia.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_support_ticket'
+      responses:
+        '200':
+          description: Ticket został wysłany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_support_ticket'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+
+  /ogolne/resolver/{username}:
+    get:
+      tags:
+        - Ogolne
+      summary: Uzyskaj ID użytkownika na podstawie nazwy z @
+      description: Endpoint pozwala uzyskać ID użytkownika na podstawie nazwy z @.
+      parameters:
+        - name: username
+          in: path
+          description: Nazwa użytkownika z @
+          required: true
+          schema:
+            type: string
+            example: "@user2024"
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_resolver'
+        '404':
+          description: Użytkownik nie znaleziony
+
+  /ogolne/avatar/{id}:
+    get:
+      tags:
+        - Ogolne
+      summary: Pobierz link do awataru użytkownika
+      description: Endpoint zwraca link do obrazu awataru użytkownika o podanym ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID użytkownika
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_avatar_get'
+        '404':
+          description: Użytkownik nie znaleziony
+
+  /gosc/reserve:
+    post:
+      tags:
+        - Gosc
+      summary: Zarezerwuj obraz (Gosc)
+      description: Endpoint pozwala gościowi zarezerwować obraz.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_gosc_reserve'
+      responses:
+        '200':
+          description: Rezerwacja zakończona sukcesem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_gosc_reserve'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /gosc/zamowienia:
+    get:
+      tags:
+        - Gosc
+      summary: Pobierz listę zamówień gościa
+      description: Endpoint zwraca listę zamówień danego gościa. Wymaga tokenu JWT.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_gosc_zamowienia'
+        '401':
+          description: Brak autoryzacji
+        '403':
+          description: Brak dostępu
+
+  /artysta/mojedziela:
+    get:
+      tags:
+        - Artysta
+      summary: Pobierz listę dzieł artysty
+      description: Endpoint zwraca listę dzieł artysty wraz z linkami do zdjęć.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_artysta_mojedziela'
+        '401':
+          description: Brak autoryzacji
+        '403':
+          description: Brak dostępu
+
+  /artysta/sales:
+    get:
+      tags:
+        - Artysta
+      summary: Pobierz listę sprzedanych dzieł artysty
+      description: Endpoint zwraca listę sprzedanych dzieł artysty wraz z linkami do zdjęć.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_artysta_sales'
+        '401':
+          description: Brak autoryzacji
+        '403':
+          description: Brak dostępu
+
+  /hotel/feed:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz feed hotelu
+      description: Endpoint zwraca feed hotelu, czyli tablicę linków do obrazów wraz z nickiem artysty i linkiem do jego awatara.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_feed'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /hotel/reservations:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz listę zarezerwowanych dzieł
+      description: Endpoint zwraca listę zarezerwowanych dzieł wraz z danymi rezerwacji i linkiem do zdjęcia.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_reservations'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /artysta/dzielo:
+    post:
+      tags:
+        - Artysta
+      summary: Dodaj nowe dzieło sztuki
+      description: Endpoint pozwala artyście dodać nowe dzieło sztuki do systemu.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_artysta_dzielo'
+      responses:
+        '201':
+          description: Dzieło sztuki zostało dodane pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_artysta_dzielo'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /hotel/deliveries:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz listę dostaw dla hotelu
+      description: Endpoint zwraca listę dostaw dla hotelu wraz z adresami zasobów zdjęć.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_deliveries'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /hotel/add-delivery-info/{idobrazu}:
+    post:
+      tags:
+        - Hotel
+      summary: Dodaj informacje o dostawie do obrazu
+      description: Endpoint pozwala dodać informacje o dostawie do obrazu o określonym ID.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idobrazu
+          in: path
+          required: true
+          description: ID obrazu, do którego dodawane są informacje o dostawie
+          schema:
+            type: integer
+            example: 123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_hotel_add_delivery_info'
+      responses:
+        '201':
+          description: Informacje o dostawie zostały dodane pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_add_delivery_info'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /hotel/ownedpaintings:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz listę obrazów należących do hotelu
+      description: Endpoint zwraca listę obrazów należących do hotelu wraz z dodatkowymi informacjami, takimi jak tytuł, wymiary, artysta, status i link do obrazu.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_ownedpaintings'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/getmessages/{user_id}:
+    get:
+      tags:
+        - Wiadomosci
+      summary: Pobierz Wiadomosci z konkretnej konwersacji
+      description: Endpoint zwraca treść Wiadomosci wraz z timestampami dla wybranej konwersacji
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: user_id
+          in: path
+          description: ID użytkownika, z którym prowadzona jest konwersacja
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_getmessages'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Konwersacja nie znaleziona
+
+  /wiadomosci/transactionstatus/{idtransakcji}:
+    get:
+      tags:
+        - Wiadomosci
+      summary: Pobierz stan transakcji
+      description: Endpoint zwraca aktualny stan transakcji na podstawie podanego ID.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: idtransakcji
+          in: path
+          description: ID transakcji do sprawdzenia
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_transactionstatus'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Transakcja nie znaleziona
+
+  /hotel/artysta/profil/{id_artysty}:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz link do profilu artysty
+      description: Endpoint zwraca link do profilu artysty o podanym ID.
+      parameters:
+        - name: id_artysty
+          in: path
+          description: ID artysty
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_artysta_profil'
+        '404':
+          description: Artysta nie znaleziony
+
+  /ogolne/zmiana-hasla:
+    put:
+      tags:
+        - Ogolne
+      summary: Zmień hasło użytkownika
+      description: Endpoint pozwala zalogowanemu użytkownikowi zmienić swoje hasło.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_zmiana_hasla'
+      responses:
+        '200':
+          description: Hasło zostało zmienione pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_zmiana_hasla'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji lub nieprawidłowe stare hasło
+
+  /ogolne/dane-dostawy:
+    put:
+      tags:
+        - Ogolne
+      summary: Zaktualizuj dane dostawy użytkownika
+      description: Endpoint pozwala zalogowanemu użytkownikowi zaktualizować swoje dane dostawy.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_dane_dostawy'
+      responses:
+        '200':
+          description: Dane dostawy zostały zaktualizowane pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_dane_dostawy'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+
+  /ogolne/user/nickname/{id}:
+    get:
+      tags:
+        - Ogolne
+      summary: Pobierz nick użytkownika z @ na początku
+      description: Endpoint zwraca nick użytkownika z @ na początku na podstawie ID użytkownika.
+      parameters:
+        - name: id
+          in: path
+          description: ID użytkownika
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_user_nickname'
+        '404':
+          description: Użytkownik nie znaleziony
+
+  /hotel/followedartists:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz listę obserwowanych artystów
+      description: Endpoint zwraca listę ID artystów obserwowanych przez hotel.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_followedartists'
+        '401':
+          description: Brak autoryzacji
+
+  /wiadomosci/latest-timestamps:
+    get:
+      tags:
+        - Wiadomosci
+      summary: Pobierz timestampy najnowszych Wiadomosci z wszystkich konwersacji
+      description: Endpoint zwraca tablicę zawierającą ID użytkowników i timestampy ich najnowszych Wiadomosci.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_latest_timestamps'
+        '401':
+          description: Brak autoryzacji
+        '500':
+          description: Błąd serwera
+
+  /hotel/stronahotelu:
+    put:
+      tags:
+        - Hotel
+      summary: Dodaj lub zaktualizuj link do strony hotelu
+      description: Endpoint pozwala hotelowi dodać lub zaktualizować link do swojej strony internetowej.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_hotel_stronahotelu'
+      responses:
+        '200':
+          description: Link do strony hotelu został zapisany
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_stronahotelu'
+        '400':
+          description: Nieprawidłowy URL
+        '401':
+          description: Brak autoryzacji
+
+  /artysta/stronahotelu/{id_hotelu}:
+    get:
+      tags:
+        - Artysta
+      summary: Pobierz link do strony hotelu
+      description: Endpoint zwraca link do strony hotelu o podanym ID.
+      parameters:
+        - name: id_hotelu
+          in: path
+          description: ID hotelu
+          required: true
+          schema:
+            type: integer
+            example: 456
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_artysta_stronahotelu'
+        '404':
+          description: Hotel nie znaleziony lub brak strony
+
+  /wiadomosci/getconversations:
+    get:
+      tags:
+        - Wiadomosci
+      summary: Pobierz listę konwersacji
+      description: Endpoint zwraca listę konwersacji z podstawowymi informacjami (URL awatara, ID użytkownika i ID transakcji)
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_getconversations'
+        '401':
+          description: Brak autoryzacji
+
+  /hotel/painting/like/{image_id}:
+    post:
+      tags:
+        - Hotel
+      summary: Dodaj like dla obrazu
+      description: Endpoint pozwala dodać like dla danego obrazu (wywoływane przez hotel).
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          description: ID obrazu, któremu dodajemy like
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Like został dodany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_painting_like'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+    delete:
+      tags:
+        - Hotel
+      summary: Usuń like dla obrazu
+      description: Endpoint pozwala usunąć like dla danego obrazu (wywoływane przez hotel).
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          description: ID obrazu, któremu usuwamy like
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Like został usunięty pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_painting_unlike'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /artysta/dzielo/{image_id}:
+    delete:
+      tags:
+        - Artysta
+      summary: Usuń dzieło artysty
+      description: Endpoint pozwala artyście usunąć swoje dzieło z systemu.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: image_id
+          in: path
+          description: ID dzieła do usunięcia
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Dzieło zostało usunięte pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_artysta_dzielo_delete'
+        '401':
+          description: Brak autoryzacji lub użytkownik nie jest autorem dzieła
+        '404':
+          description: Dzieło nie znalezione
+        '409':
+          description: Nie można usunąć dzieła (np. jest już zarezerwowane lub sprzedane)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_artysta_dzielo_delete_conflict'
+
+  /hotel/stronaobrazu/{obraz_id}:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz szczegóły obrazu
+      description: Endpoint zwraca szczegółowe informacje o obrazie wraz z URL do zdjęć (takie same pola jak /artysta/dzielo)
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: obraz_id
+          in: path
+          description: ID obrazu
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_stronaobrazu'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Obraz nie znaleziony
+
+  /hotel/stronaartysty/{artist_id}:
+    get:
+      tags:
+        - Hotel
+      summary: Pobierz dzieła artysty z informacją o polubieniach
+      description: Endpoint zwraca tablicę dzieł danego artysty z URL obrazów i informacją czy hotel je polubił
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: artist_id
+          in: path
+          description: ID artysty
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_hotel_stronaartysty'
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Artysta nie znaleziony
+
+  /wiadomosci/sendmessage:
+    post:
+      tags:
+        - Wiadomosci
+      summary: Wyślij wiadomość
+      description: Endpoint do wysyłania Wiadomosci między użytkownikami (artysta-hotel, hotel-gosc, artysta-gosc)
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_wiadomosci_sendmessage'
+      responses:
+        '201':
+          description: Wiadomość została wysłana
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_wiadomosci_sendmessage'
+        '400':
+          description: Nieprawidłowe dane wejściowe
+        '401':
+          description: Brak autoryzacji
+        '403':
+          description: Brak uprawnień do wysłania Wiadomosci
+        '404':
+          description: Odbiorca nie znaleziony
+
+  /ogolne/avatar:
+    put:
+      tags:
+        - Ogolne
+      summary: Zaktualizuj link do awatara użytkownika
+      description: Endpoint pozwala zalogowanemu użytkownikowi zaktualizować link do swojego awatara.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Token JWT w formacie "Bearer {token}"
+          required: true
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request_ogolne_avatar_update'
+      responses:
+        '200':
+          description: Awatar został zaktualizowany pomyślnie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_avatar_update'
+        '400':
+          description: Nieprawidłowy URL
+        '401':
+          description: Brak autoryzacji
+
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    # Responses
+    response_hotel_confirm_delivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dostarczenie obrazu zostało potwierdzone."
+
+    response_hotel_generate_qr:
+      type: object
+      properties:
+        qr_code_url:
+          type: string
+          example: "https://example.com/qr-codes/image_123.png"
+
+    response_hotel_sell:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Obraz został oznaczony jako sprzedany."
+
+    response_hotel_artysta_follow:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Follow został dodany."
+
+    response_hotel_artysta_unfollow:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Follow został usunięty."
+
+    response_wiadomosci_reservepainting:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prośba o rezerwację została wysłana."
+
+    response_wiadomosci_acceptreservation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Rezerwacja została zaakceptowana."
+
+    response_wiadomosci_finalizeprocess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Proces rezerwacji został zakończony."
+
+    response_wiadomosci_cancelreservation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Rezerwacja została anulowana."
+
+    response_wiadomosci_requestdelivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Żądanie dostawy zostało wysłane."
+
+    response_wiadomosci_acceptdelivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dostawa została zaakceptowana."
+
+    response_wiadomosci_confirmdelivery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dostawa została potwierdzona."
+
+    response_ogolne_logowanie:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    response_ogolne_rejestracja:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: "jan.kowalski@example.com"
+        login:
+          type: string
+          example: "jan_kowalski"
+        typ_uzytkownika:
+          type: string
+          example: "gosc"
+
+    response_ogolne_support_ticket:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Ticket został przyjęty do realizacji."
+
+    response_ogolne_resolver:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 123
+
+    response_ogolne_avatar_get:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          example: "https://example.com/avatars/user123.png"
+
+    response_gosc_reserve:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Obraz został zarezerwowany."
+
+    response_gosc_zamowienia:
+      type: object
+      properties:
+        zamowienia:
+          type: array
+          items:
+            type: object
+            properties:
+              bought_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              price:
+                type: string
+                example: "$650"
+              hotel:
+                type: string
+                example: "@Hotel Lord"
+              status:
+                type: string
+                example: "Waiting for payment (reception)"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_artysta_mojedziela:
+      type: object
+      properties:
+        dziela:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 123
+              date_of_post:
+                type: string
+                format: date
+                example: "2024-11-11"
+              price:
+                type: string
+                example: "$600"
+              hotel:
+                type: string
+                example: "@NY_Hotel_Star"
+              viewers:
+                type: integer
+                example: 59
+              likes:
+                type: integer
+                example: 12
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_artysta_sales:
+      type: object
+      properties:
+        sales:
+          type: array
+          items:
+            type: object
+            properties:
+              sold_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              price:
+                type: string
+                example: "$650"
+              hotel:
+                type: string
+                example: "@GoldenHotelNY"
+              likes:
+                type: integer
+                example: 13
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_hotel_feed:
+      type: object
+      properties:
+        feed:
+          type: array
+          items:
+            type: object
+            properties:
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+              painting_site:
+                type: string
+                example: "https://example.com/image_abc"
+              artist_nick:
+                type: string
+                example: "jan_kowalski"
+              artist_avatar_url:
+                type: string
+                example: "https://example.com/avatars/jan_kowalski.png"
+
+    response_hotel_reservations:
+      type: object
+      properties:
+        reservations:
+          type: array
+          items:
+            type: object
+            properties:
+              reserved_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              buyer:
+                type: string
+                example: "@user2025"
+              dimensions:
+                type: string
+                example: "100cm x 100cm x 10cm"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_artysta_dzielo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Pejzaż górski"
+        dimensions:
+          type: string
+          example: "100x150 cm"
+        price:
+          type: number
+          example: 1200
+        category:
+          type: string
+          example: "Malarstwo"
+        medium:
+          type: string
+          example: "Olej na płótnie"
+        style:
+          type: string
+          example: "Realizm"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        description:
+          type: string
+          example: "Pejzaż przedstawiający góry o zachodzie słońca."
+
+    response_hotel_deliveries:
+      type: object
+      properties:
+        deliveries:
+          type: array
+          items:
+            type: object
+            properties:
+              paid_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              buyer:
+                type: string
+                example: "@user2024"
+              dimensions:
+                type: string
+                example: "100cm x 100cm x 10cm"
+              ship_to:
+                type: object
+                properties:
+                  first_name:
+                    type: string
+                    example: "John"
+                  last_name:
+                    type: string
+                    example: "Smith"
+                  street_address:
+                    type: string
+                    example: "Baker Street 11/2"
+                  city:
+                    type: string
+                    example: "Szczecin"
+                  state_province_region:
+                    type: string
+                    example: "Zachodniopomorskie"
+                  zip_code:
+                    type: string
+                    example: "70-000"
+                  email_address:
+                    type: string
+                    example: "john_smith@example.com"
+                  phone_number:
+                    type: string
+                    example: "+48 123 456 789"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_hotel_add_delivery_info:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Informacje o dostawie zostały dodane do obrazu."
+        delivery_id:
+          type: integer
+          example: 1
+
+    response_hotel_ownedpaintings:
+      type: object
+      properties:
+        paintings:
+          type: array
+          items:
+            type: object
+            properties:
+              taken_on:
+                type: string
+                format: date
+                example: "2024-12-11"
+              dimensions:
+                type: string
+                example: "50cm x 100cm x 10cm"
+              artist:
+                type: string
+                example: "@artist2023"
+              status:
+                type: string
+                example: "IN DELIVERY TO YOU"
+              title:
+                type: string
+                example: "Pejzaż górski"
+              image_url:
+                type: string
+                example: "https://example.com/images/image.png"
+
+    response_wiadomosci_getmessages:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
+                example: "Cześć, jak tam Twoje nowe obrazy?"
+              timestamp:
+                type: string
+                format: date-time
+                example: "2024-03-15T14:30:22Z"
+
+    response_wiadomosci_transactionstatus:
+      type: object
+      properties:
+        transaction_id:
+          type: integer
+          example: 123
+        status:
+          type: string
+          enum:
+            - "NOWA"
+            - "W TRAKCIE"
+            - "ZAAKCEPTOWANA"
+            - "ANULOWANA"
+            - "DOSTAWA W TRAKCIE"
+            - "DOSTAWA ZAAKCEPTOWANA"
+            - "ZAKOŃCZONA"
+          example: "W TRAKCIE"
+        last_updated:
+          type: string
+          format: date-time
+          example: "2024-03-15T14:30:22Z"
+
+    response_hotel_artysta_profil:
+      type: object
+      properties:
+        profile_url:
+          type: string
+          example: "https://example.com/artists/123"
+
+    response_ogolne_zmiana_hasla:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Hasło zostało pomyślnie zmienione."
+
+    response_ogolne_dane_dostawy:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dane dostawy zostały zaktualizowane."
+        dane_dostawy:
+          type: object
+          properties:
+            street_address:
+              type: string
+              example: "Baker Street 11/2"
+            city:
+              type: string
+              example: "Szczecin"
+            state_province_region:
+              type: string
+              example: "Zachodniopomorskie"
+            zip_code:
+              type: string
+              example: "70-000"
+            email_address:
+              type: string
+              example: "john_smith@example.com"
+            phone_number:
+              type: string
+              example: "+48 123 456 789"
+
+    response_ogolne_user_nickname:
+      type: object
+      properties:
+        nickname:
+          type: string
+          example: "@jan_kowalski"
+
+    response_hotel_followedartists:
+      type: object
+      properties:
+        artists:
+          type: array
+          items:
+            type: object
+            properties:
+              id_artysty:
+                type: integer
+                example: 123
+
+    response_wiadomosci_latest_timestamps:
+      type: object
+      properties:
+        timestamps:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                example: 123
+              latest_timestamp:
+                type: string
+                format: date-time
+                example: "2024-03-15T14:30:22Z"
+
+    response_hotel_stronahotelu:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Link do strony hotelu został zapisany."
+        website_url:
+          type: string
+          example: "https://www.example-hotel.com"
+
+    response_artysta_stronahotelu:
+      type: object
+      properties:
+        website_url:
+          type: string
+          example: "https://www.example-hotel.com"
+
+    response_wiadomosci_getconversations:
+      type: object
+      properties:
+        conversations:
+          type: array
+          items:
+            type: object
+            properties:
+              avatar_url:
+                type: string
+                example: "https://example.com/avatars/user123.png"
+              user_id:
+                type: integer
+                example: 123
+              id_transaction:
+                type: integer
+                example: 456
+
+    response_hotel_painting_like:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Like został dodany."
+        likes_count:
+          type: integer
+          example: 42
+
+    response_hotel_painting_unlike:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Like został usunięty."
+        likes_count:
+          type: integer
+          example: 41
+
+    response_artysta_dzielo_delete:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dzieło zostało pomyślnie usunięte."
+        deleted_image_id:
+          type: integer
+          example: 123
+
+    response_artysta_dzielo_delete_conflict:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Nie można usunąć dzieła, ponieważ jest już zarezerwowane."
+        current_status:
+          type: string
+          example: "RESERVED"
+
+    response_hotel_stronaobrazu:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Pejzaż górski"
+        dimensions:
+          type: string
+          example: "100x150 cm"
+        price:
+          type: number
+          example: 1200
+        category:
+          type: string
+          example: "Malarstwo"
+        medium:
+          type: string
+          example: "Olej na płótnie"
+        style:
+          type: string
+          example: "Realizm"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        description:
+          type: string
+          example: "Pejzaż przedstawiający góry o zachodzie słońca."
+        artist_id:
+          type: integer
+          example: 456
+        artist_nick:
+          type: string
+          example: "@jan_kowalski"
+        artist_avatar_url:
+          type: string
+          example: "https://example.com/avatars/jan_kowalski.png"
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                example: "https://example.com/images/image1.jpg"
+
+    response_hotel_stronaartysty:
+      type: object
+      properties:
+        artist_info:
+          type: object
+          properties:
+            artist_id:
+              type: integer
+              example: 123
+            nickname:
+              type: string
+              example: "@jan_kowalski"
+            avatar_url:
+              type: string
+              example: "https://example.com/avatars/jan_kowalski.png"
+            is_followed:
+              type: boolean
+              example: true
+        artworks:
+          type: array
+          items:
+            type: object
+            properties:
+              artwork_id:
+                type: integer
+                example: 456
+              image_url:
+                type: string
+                example: "https://example.com/images/pejzaz.jpg"
+              is_liked:
+                type: boolean
+                example: true
+
+    response_wiadomosci_sendmessage:
+      type: object
+      properties:
+        message_id:
+          type: integer
+          example: 789
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-03-20T14:30:22Z"
+        status:
+          type: string
+          example: "SENT"
+
+    response_ogolne_avatar_update:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Link do awatara został zaktualizowany."
+        avatar_url:
+          type: string
+          example: "https://example.com/avatars/new_avatar.jpg"
+
+    # Requests
+    request_ogolne_logowanie:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "jan_kowalski"
+        password:
+          type: string
+          example: "haslo123"
+      required:
+        - username
+        - password
+
+    request_ogolne_rejestracja:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "jan.kowalski@example.com"
+        login:
+          type: string
+          example: "jan_kowalski"
+        haslo:
+          type: string
+          example: "haslo123"
+        typ_uzytkownika:
+          type: string
+          enum:
+            - gosc
+            - artysta
+            - hotel
+          example: "gosc"
+      required:
+        - email
+        - login
+        - haslo
+        - typ_uzytkownika
+
+    request_ogolne_support_ticket:
+      type: object
+      properties:
+        imie_i_nazwisko:
+          type: string
+          example: "Jan Kowalski"
+        email:
+          type: string
+          example: "jan.kowalski@example.com"
+        temat:
+          type: string
+          example: "Problem z rezerwacją"
+        wiadomosc:
+          type: string
+          example: "Nie mogę zalogować się do swojego konta."
+      required:
+        - imie_i_nazwisko
+        - email
+        - temat
+        - wiadomosc
+
+    request_gosc_reserve:
+      type: object
+      properties:
+        image_id:
+          type: integer
+          example: 123
+        buyer_id:
+          type: integer
+          nullable: true
+          example: null
+      required:
+        - image_id
+        - buyer_id
+
+    request_artysta_dzielo:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Pejzaż górski"
+        dimensions:
+          type: string
+          example: "100x150 cm"
+        price:
+          type: number
+          example: 1200
+        category:
+          type: string
+          example: "Malarstwo"
+        medium:
+          type: string
+          example: "Olej na płótnie"
+        style:
+          type: string
+          example: "Realizm"
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        description:
+          type: string
+          example: "Pejzaż przedstawiający góry o zachodzie słońca."
+      required:
+        - title
+        - dimensions
+        - price
+        - category
+        - medium
+        - style
+        - date
+        - description
+
+    request_hotel_add_delivery_info:
+      type: object
+      properties:
+        paid_on:
+          type: string
+          format: date
+          example: "2024-12-11"
+        buyer:
+          type: string
+          example: "@user2024"
+        dimensions:
+          type: string
+          example: "100cm x 100cm x 10cm"
+        ship_to:
+          type: object
+          properties:
+            first_name:
+              type: string
+              example: "John"
+            last_name:
+              type: string
+              example: "Smith"
+            street_address:
+              type: string
+              example: "Baker Street 11/2"
+            city:
+              type: string
+              example: "Szczecin"
+            state_province_region:
+              type: string
+              example: "Zachodniopomorskie"
+            zip_code:
+              type: string
+              example: "70-000"
+            email_address:
+              type: string
+              example: "john_smith@example.com"
+            phone_number:
+              type: string
+              example: "+48 123 456 789"
+      required:
+        - paid_on
+        - buyer
+        - dimensions
+        - ship_to
+
+    request_ogolne_zmiana_hasla:
+      type: object
+      properties:
+        stare_haslo:
+          type: string
+          example: "stareHaslo123"
+        nowe_haslo:
+          type: string
+          example: "noweHaslo456"
+      required:
+        - stare_haslo
+        - nowe_haslo
+
+    request_ogolne_dane_dostawy:
+      type: object
+      properties:
+        street_address:
+          type: string
+          example: "Baker Street 11/2"
+        city:
+          type: string
+          example: "Szczecin"
+        state_province_region:
+          type: string
+          example: "Zachodniopomorskie"
+        zip_code:
+          type: string
+          example: "70-000"
+        email_address:
+          type: string
+          example: "john_smith@example.com"
+        phone_number:
+          type: string
+          example: "+48 123 456 789"
+      required:
+        - street_address
+        - city
+        - state_province_region
+        - zip_code
+        - email_address
+        - phone_number
+
+    request_hotel_stronahotelu:
+      type: object
+      properties:
+        website_url:
+          type: string
+          format: uri
+          example: "https://www.example-hotel.com"
+      required:
+        - website_url
+
+    request_wiadomosci_sendmessage:
+      type: object
+      properties:
+        recipient_id:
+          type: integer
+          example: 123
+        content:
+          type: string
+          example: "Czy obraz jest jeszcze dostępny?"
+      required:
+        - recipient_id
+        - content
+
+    request_ogolne_avatar_update:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+          example: "https://example.com/avatars/new_avatar.jpg"
+      required:
+        - avatar_url
