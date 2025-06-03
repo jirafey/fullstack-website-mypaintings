@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiRequest from './api';
 import { useDemoMode } from './DemoModeContext';
 import { useToast } from './Toaster';
+import './MessagesPage.css';
 
 // Demo conversations and messages
 const DEMO_CONVERSATIONS = [
@@ -102,38 +103,52 @@ function MessagesPage() {
   };
 
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4">Messages</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <div className="row">
-        <div className="col-md-4">
-          <h5>Conversations</h5>
-          <ul className="list-group">
-            {conversations.map(conv => (
-              <li key={conv.userId} className={`list-group-item ${selectedUserId === conv.userId ? 'active' : ''}`}
-                  onClick={() => setSelectedUserId(conv.userId)} style={{ cursor: 'pointer' }}>
-                {conv.username || conv.userId}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="col-md-8">
-          <h5>Chat</h5>
-          <div className="border rounded p-3 mb-3" style={{ minHeight: 200, background: '#f9f9f9' }}>
-            {messages.length === 0 ? <div className="text-muted">No messages</div> :
-              messages.map((msg, idx) => (
-                <div key={idx} className="mb-2">
-                  <strong>{msg.senderName || msg.senderId}:</strong> {msg.content}
-                  <span className="text-muted small ms-2">{msg.timestamp}</span>
+    <div className="container py-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          <div className="card shadow-lg rounded-4 p-4 mb-4 messages-card">
+            <h2 className="mb-4 fw-bold">Messages</h2>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <div className="row g-4">
+              <div className="col-md-4">
+                <h5 className="mb-3 fw-semibold">Conversations</h5>
+                <ul className="list-group conversations-list">
+                  {conversations.map(conv => (
+                    <li key={conv.userId} className={`list-group-item rounded-4 mb-2 ${selectedUserId === conv.userId ? 'active' : ''}`}
+                        onClick={() => setSelectedUserId(conv.userId)} style={{ cursor: 'pointer' }}>
+                      <div className="d-flex align-items-center">
+                        <img src={`https://randomuser.me/api/portraits/${conv.userId % 2 ? 'men' : 'women'}/${conv.userId % 70}.jpg`} alt={conv.username} className="rounded-circle me-3" width={40} height={40} />
+                        <div>
+                          <div className="fw-semibold">{conv.username || conv.userId}</div>
+                          <div className="text-muted small">Last message: {conv.lastMessage || 'No messages'}</div>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="col-md-8">
+                <h5 className="mb-3 fw-semibold">Chat</h5>
+                <div className="chat-box border rounded-4 p-3 mb-3" style={{ minHeight: 300, background: '#f9f9f9' }}>
+                  {messages.length === 0 ? <div className="text-muted text-center py-5">No messages</div> :
+                    messages.map((msg, idx) => (
+                      <div key={idx} className={`message-bubble ${msg.senderId === 'me' ? 'sent' : 'received'} mb-3`}>
+                        <div className="message-content">
+                          <div className="message-text">{msg.content}</div>
+                          <div className="message-timestamp small text-muted">{msg.timestamp}</div>
+                        </div>
+                      </div>
+                    ))}
                 </div>
-              ))}
+                {selectedUserId && (
+                  <form onSubmit={handleSend} className="d-flex">
+                    <input type="text" className="form-control me-2 rounded-pill" value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder="Type a message..." />
+                    <button className="btn btn-primary rounded-pill" type="submit">Send</button>
+                  </form>
+                )}
+              </div>
+            </div>
           </div>
-          {selectedUserId && (
-            <form onSubmit={handleSend} className="d-flex">
-              <input type="text" className="form-control me-2" value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder="Type a message..." />
-              <button className="btn btn-primary" type="submit">Send</button>
-            </form>
-          )}
         </div>
       </div>
     </div>

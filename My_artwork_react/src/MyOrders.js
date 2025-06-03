@@ -205,7 +205,7 @@ function MyOrders() {
 
     // Renderowanie zawartości
     const renderContent = () => {
-         if (loading) {
+        if (loading) {
             return (
                 <div className="text-center py-5">
                     <div className="spinner-border text-primary" role="status">
@@ -220,72 +220,56 @@ function MyOrders() {
         }
 
         return (
-            <>
-                {demoMode && (
-                    <div className="mb-3 text-end">
-                        <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Order</button>
-                    </div>
-                )}
-                <div className="row">
-                    {orders.map((order, index) => (
-                        <div className="col-lg-6 mb-4" key={index}>
-                            <div className="order-item d-flex p-3 border rounded bg-white shadow-sm">
-                                <div className="order-image me-3">
-                                    <img
-                                        src={order.image_url || placeholderImg}
-                                        alt="Obraz zamówienia"
-                                        className="img-fluid rounded"
-                                        style={{ width: '130px', height: '130px', objectFit: 'cover' }}
-                                        onError={(e) => { e.target.onerror = null; e.target.src = placeholderImg; }}
-                                    />
+            <div className="container py-4">
+                <div className="row justify-content-center">
+                    <div className="col-lg-10">
+                        <div className="card shadow-lg rounded-4 p-4 mb-4 orders-card">
+                            <h2 className="mb-4 fw-bold">My Orders</h2>
+                            {demoMode && (
+                                <div className="mb-3 text-end">
+                                    <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Order</button>
                                 </div>
-                                <div className="order-details flex-grow-1">
-                                    <p><strong>Bought on:</strong> {order.bought_on || 'N/A'}</p>
-                                    <p><strong>Price:</strong> {order.price || 'N/A'}</p>
-                                    <p><strong>Hotel:</strong> <span className="hotel-link">{order.hotel || 'N/A'}</span></p>
-                                    <p><strong>Status:</strong> <span className={`status-label ${getStatusClass(order.status || '')}`}>{order.status || 'Unknown'}</span></p>
-                                    {demoMode ? (
-                                        <>
-                                            <button className="btn btn-success btn-sm mt-2 me-2" onClick={() => handleConfirmDeliveryDemo(order.id)}>
-                                                Confirm delivery
-                                            </button>
-                                            <button className="btn btn-danger btn-sm mt-2" onClick={() => handleCancelReservationDemo(order.id)}>
-                                                Cancel reservation
-                                            </button>
-                                            {(userType === 'HOTEL' && order.status && order.status.toLowerCase().includes('waiting')) && (
-                                                <button className="btn btn-primary btn-sm mt-2 me-2" onClick={() => handleAcceptReservationDemo(order.id)}>
-                                                    Potwierdź rezerwację
-                                                </button>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button className="btn btn-success btn-sm mt-2 me-2" onClick={() => handleConfirmDelivery(order.id)}>
-                                                Confirm delivery
-                                            </button>
-                                            <button className="btn btn-danger btn-sm mt-2" onClick={() => handleCancelReservation(order.id)}>
-                                                Cancel reservation
-                                            </button>
-                                            {(userType === 'HOTEL' && order.status && order.status.toLowerCase().includes('waiting')) && (
-                                                <button className="btn btn-primary btn-sm mt-2 me-2" onClick={() => handleAcceptReservation(order.id)}>
-                                                    Potwierdź rezerwację
-                                                </button>
-                                            )}
-                                        </>
-                                    )}
-                                </div>
+                            )}
+                            <div className="row g-4">
+                                {orders.map(order => (
+                                    <div key={order.id} className="col-md-6 col-lg-4">
+                                        <div className="order-card rounded-4 shadow-sm">
+                                            <img src={order.image_url || placeholderImg} alt="Order" className="order-image rounded-4" style={{ width: '100%', height: 200, objectFit: 'cover' }} />
+                                            <div className="order-details p-3">
+                                                <div className="d-flex align-items-center mb-2">
+                                                    <img src={`https://randomuser.me/api/portraits/${order.id % 2 ? 'men' : 'women'}/${order.id % 70}.jpg`} alt={order.hotel} className="rounded-circle me-2" width={32} height={32} />
+                                                    <div>
+                                                        <div className="fw-semibold">{order.hotel}</div>
+                                                        <div className="text-muted small">{order.bought_on}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="mb-2"><span className="badge bg-light text-dark">{order.price}</span></div>
+                                                <div className={`status-badge ${getStatusClass(order.status)} mb-3`}>{order.status}</div>
+                                                <div className="d-flex gap-2">
+                                                    {order.status === 'Waiting for payment' && (
+                                                        <button className="btn btn-success btn-sm rounded-pill flex-fill" onClick={() => handleConfirmDeliveryDemo(order.id)}>Confirm Delivery</button>
+                                                    )}
+                                                    {order.status === 'Waiting to be sent' && (
+                                                        <button className="btn btn-primary btn-sm rounded-pill flex-fill" onClick={() => handleAcceptReservationDemo(order.id)}>Accept Reservation</button>
+                                                    )}
+                                                    <button className="btn btn-danger btn-sm rounded-pill flex-fill" onClick={() => handleCancelReservationDemo(order.id)}>Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    ))}
+                    </div>
                 </div>
-            </>
+            </div>
         );
     };
 
     return (
         <>
-             <h1 className="text-center mb-4 page-title-orders">My orders</h1>
-             {renderContent()}
+            <h1 className="text-center mb-4 page-title-orders">My orders</h1>
+            {renderContent()}
         </>
     );
 }

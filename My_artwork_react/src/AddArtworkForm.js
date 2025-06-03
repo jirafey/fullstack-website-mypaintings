@@ -97,87 +97,77 @@ function AddArtworkForm() {
 
     // --- Render JSX ---
     return (
-        <>
-            {/* Sekcja zarządzania tokenem */}
-            <div className="token-section card card-body bg-light p-2 mb-4">
-                <div className="d-flex flex-wrap align-items-center ">
-                    <label htmlFor="jwtTokenInput" className="form-label me-2 mb-1 mb-md-0 small fw-bold">Token JWT:</label>
-                    <input type="password" id="jwtTokenInput" placeholder="Wklej token JWT" value={tokenInput} onChange={handleTokenInputChange}
-                           className="form-control form-control-sm me-2 mb-1 mb-md-0 flex-grow-1" style={{ minWidth: '200px' }} />
-                    <button onClick={saveTokenToStorage} className="btn btn-secondary btn-sm"><i className="bi bi-save me-1"></i> Zapisz</button>
-                </div>
-                <div className="mt-1 small text-muted">{tokenStatus}</div>
-            </div>
-
-            <h1 className="text-center mb-4">Posting</h1>
-
-            {/* Formularz */}
-            <form onSubmit={handleSubmit} onReset={handleReset}>
-                <div className="row">
-                    {/* Lewa Kolumna */}
-                    <div className="col-md-5 mb-3">
-                        <div className="image-preview-box border rounded p-2 text-center bg-light d-flex flex-column justify-content-center" style={{ minHeight: '350px' }}>
-                            {imagePreview ? (
-                                <img src={imagePreview} alt="Podgląd dzieła" className="img-fluid mb-2 mx-auto"
-                                     style={{ maxHeight: '280px', objectFit: 'contain' }}
-                                     onError={(e) => { e.target.onerror = null; e.target.src = '/img.png'; }} />
-                            ) : (
-                                <div className="text-muted">Brak podglądu</div>
-                            )}
-                            <input type="url" id="imageUrl" name="imageUrl" placeholder="Wklej URL obrazu do podglądu..."
-                                   value={formData.imageUrl} onChange={handleInputChange} className="form-control form-control-sm mt-auto" />
-                        </div>
-                    </div>
-                    {/* Prawa Kolumna */}
-                    <div className="col-md-7">
-                        <div className="row">
-                            {/* Sub-kolumna 1 */}
-                            <div className="col-lg-6">
-                                <div className="mb-2"><label htmlFor="title" className="form-label form-label-sm">Title</label><input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} className="form-control form-control-sm" required /></div>
-                                <div className="mb-2"><label htmlFor="dimensions" className="form-label form-label-sm">Dimensions</label><input type="text" id="dimensions" name="dimensions" value={formData.dimensions} onChange={handleInputChange} placeholder="np. 100x150 cm" className="form-control form-control-sm" required /></div>
-                                <div className="mb-2"><label htmlFor="price" className="form-label form-label-sm">Price</label><div className="input-group input-group-sm"><span className="input-group-text">$</span><input type="number" step="0.01" min="0.01" id="price" name="price" value={formData.price} onChange={handleInputChange} className="form-control form-control-sm" required /></div></div>
-                                <div className="mb-2"><label htmlFor="category" className="form-label form-label-sm">Category</label><input type="text" id="category" name="category" value={formData.category} onChange={handleInputChange} placeholder="np. Malarstwo" className="form-control form-control-sm" required /></div>
-                                <div className="mb-2"><label htmlFor="medium" className="form-label form-label-sm">Medium</label><input type="text" id="medium" name="medium" value={formData.medium} onChange={handleInputChange} placeholder="np. Olej na płótnie" className="form-control form-control-sm" required /></div>
-                                <div className="mb-2"><label htmlFor="style" className="form-label form-label-sm">Style</label><input type="text" id="style" name="style" value={formData.style} onChange={handleInputChange} placeholder="np. Realizm" className="form-control form-control-sm" required /></div>
-                                <div className="mb-2"><label htmlFor="date" className="form-label form-label-sm">Date</label><input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} className="form-control form-control-sm" required /></div>
-                            </div>
-                            {/* Sub-kolumna 2 */}
-                            <div className="col-lg-6 d-flex flex-column">
-                                <div className="mb-2 flex-grow-1 d-flex flex-column"><label htmlFor="description" className="form-label form-label-sm">Description</label><textarea id="description" name="description" value={formData.description} onChange={handleInputChange} className="form-control form-control-sm flex-grow-1" rows="10" required style={{ resize: 'vertical' }}></textarea></div>
+        <div className="container py-4">
+            <div className="row justify-content-center">
+                <div className="col-lg-8">
+                    <div className="card shadow-lg rounded-4 p-4 mb-4 post-artwork-card">
+                        <div className="d-flex align-items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Artist Avatar" className="rounded-circle me-3" width={56} height={56} />
+                            <div>
+                                <h3 className="mb-0 fw-bold">Post New Artwork</h3>
+                                <div className="text-muted small">as Demo Artist</div>
                             </div>
                         </div>
-                        {/* Przyciski */}
-                        <div className="row mt-3">
-                            <div className="col-12 d-flex justify-content-end">
-                                <button type="reset" className="btn btn-outline-secondary btn-sm me-2"><i className="bi bi-x-lg me-1"></i> Reset</button>
-                                <button type="submit" className="btn btn-primary btn-sm"><i className="bi bi-check-lg me-1"></i> Submit</button>
-                            </div>
-                        </div>
-                    </div> {/* End Right Column */}
-                </div> {/* End Main Row */}
-            </form>
-
-            {/* Demo: Show added artworks */}
-            {demoMode && demoArtworks.length > 0 && (
-                <div className="mt-4">
-                    <h4>Recently Added Artworks (Demo)</h4>
-                    <div className="row">
-                        {demoArtworks.map(art => (
-                            <div className="col-md-4 mb-3" key={art.id}>
-                                <div className="card h-100">
-                                    <img src={art.imageUrl} alt={art.title} className="card-img-top" style={{ height: 180, objectFit: 'cover' }} />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{art.title}</h5>
-                                        <p className="card-text">{art.description}</p>
-                                        <p className="card-text"><strong>Price:</strong> {art.price}</p>
+                        <form onSubmit={handleSubmit} onReset={handleReset}>
+                            <div className="row g-4">
+                                <div className="col-md-5 mb-3">
+                                    <div className="image-preview-box border rounded-4 p-2 text-center bg-light d-flex flex-column justify-content-center" style={{ minHeight: '350px' }}>
+                                        {imagePreview ? (
+                                            <img src={imagePreview} alt="Artwork Preview" className="img-fluid mb-2 mx-auto rounded-4" style={{ maxHeight: '280px', objectFit: 'contain' }} onError={(e) => { e.target.onerror = null; e.target.src = '/img.png'; }} />
+                                        ) : (
+                                            <div className="text-muted">No preview</div>
+                                        )}
+                                        <input type="url" id="imageUrl" name="imageUrl" placeholder="Paste artwork image URL..." value={formData.imageUrl} onChange={handleInputChange} className="form-control form-control-sm mt-auto rounded-pill" />
+                                    </div>
+                                </div>
+                                <div className="col-md-7">
+                                    <div className="row g-3">
+                                        <div className="col-lg-6">
+                                            <div className="mb-2"><label htmlFor="title" className="form-label form-label-sm">Title</label><input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} className="form-control form-control-sm rounded-pill" required /></div>
+                                            <div className="mb-2"><label htmlFor="dimensions" className="form-label form-label-sm">Dimensions</label><input type="text" id="dimensions" name="dimensions" value={formData.dimensions} onChange={handleInputChange} placeholder="e.g. 100x150 cm" className="form-control form-control-sm rounded-pill" required /></div>
+                                            <div className="mb-2"><label htmlFor="price" className="form-label form-label-sm">Price</label><div className="input-group input-group-sm"><span className="input-group-text">$</span><input type="number" step="0.01" min="0.01" id="price" name="price" value={formData.price} onChange={handleInputChange} className="form-control form-control-sm rounded-pill" required /></div></div>
+                                            <div className="mb-2"><label htmlFor="category" className="form-label form-label-sm">Category</label><input type="text" id="category" name="category" value={formData.category} onChange={handleInputChange} placeholder="e.g. Painting" className="form-control form-control-sm rounded-pill" required /></div>
+                                            <div className="mb-2"><label htmlFor="medium" className="form-label form-label-sm">Medium</label><input type="text" id="medium" name="medium" value={formData.medium} onChange={handleInputChange} placeholder="e.g. Oil on canvas" className="form-control form-control-sm rounded-pill" required /></div>
+                                            <div className="mb-2"><label htmlFor="style" className="form-label form-label-sm">Style</label><input type="text" id="style" name="style" value={formData.style} onChange={handleInputChange} placeholder="e.g. Realism" className="form-control form-control-sm rounded-pill" required /></div>
+                                            <div className="mb-2"><label htmlFor="date" className="form-label form-label-sm">Date</label><input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} className="form-control form-control-sm rounded-pill" required /></div>
+                                        </div>
+                                        <div className="col-lg-6 d-flex flex-column">
+                                            <div className="mb-2 flex-grow-1 d-flex flex-column"><label htmlFor="description" className="form-label form-label-sm">Description</label><textarea id="description" name="description" value={formData.description} onChange={handleInputChange} className="form-control form-control-sm flex-grow-1 rounded-4" rows="10" required style={{ resize: 'vertical' }}></textarea></div>
+                                        </div>
+                                    </div>
+                                    <div className="row mt-3">
+                                        <div className="col-12 d-flex justify-content-end gap-2">
+                                            <button type="reset" className="btn btn-outline-secondary btn-sm rounded-pill"><i className="bi bi-x-lg me-1"></i> Reset</button>
+                                            <button type="submit" className="btn btn-primary btn-sm rounded-pill"><i className="bi bi-check-lg me-1"></i> Submit</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        </form>
+                        {/* Demo: Show added artworks */}
+                        {demoMode && demoArtworks.length > 0 && (
+                            <div className="mt-4">
+                                <h4>Recently Added Artworks (Demo)</h4>
+                                <div className="row g-3">
+                                    {demoArtworks.map(art => (
+                                        <div className="col-md-4 mb-3" key={art.id}>
+                                            <div className="card h-100 rounded-4 shadow-sm">
+                                                <img src={art.imageUrl} alt={art.title} className="card-img-top rounded-4" style={{ height: 180, objectFit: 'cover' }} />
+                                                <div className="card-body">
+                                                    <h5 className="card-title">{art.title}</h5>
+                                                    <p className="card-text">{art.description}</p>
+                                                    <p className="card-text"><strong>Price:</strong> {art.price}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-            )}
-        </>
+            </div>
+        </div>
     );
 }
 

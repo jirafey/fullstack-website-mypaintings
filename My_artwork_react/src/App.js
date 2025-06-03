@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Toaster } from './Toaster';
 import { DemoModeProvider, useDemoMode } from './DemoModeContext';
 import { useToast } from './Toaster';
+import { FaPalette, FaHotel, FaUser, FaUserShield, FaChevronDown } from 'react-icons/fa';
 
 import AddArtworkForm from './AddArtworkForm';
 import MyArtwork from './MyArtwork';
@@ -329,6 +330,66 @@ function SupportPage() {
   );
 }
 
+const ROLE_OPTIONS = [
+  { value: 'ARTYSTA', label: 'Artist', icon: <FaPalette /> },
+  { value: 'HOTEL', label: 'Hotel', icon: <FaHotel /> },
+  { value: 'GOSC', label: 'Guest', icon: <FaUser /> },
+  { value: 'ADMIN', label: 'Admin', icon: <FaUserShield /> },
+];
+
+function ProfileDropdown({ userType, onSwitch, onLogout }) {
+  const [open, setOpen] = React.useState(false);
+  const currentRole = ROLE_OPTIONS.find(r => r.value === userType);
+  return (
+    <div className="profile-dropdown position-relative ms-3">
+      <button className="btn btn-light d-flex align-items-center rounded-pill shadow-sm px-3 py-1" onClick={() => setOpen(o => !o)}>
+        <img src="/pfp.png" alt="Profile" width="32" height="32" className="rounded-circle me-2" />
+        <span className="me-2">{currentRole ? currentRole.label : 'Profile'}</span>
+        <FaChevronDown />
+      </button>
+      {open && (
+        <div className="dropdown-menu show mt-2 shadow rounded" style={{ minWidth: 200, right: 0, left: 'auto', position: 'absolute', zIndex: 1000 }}>
+          <div className="dropdown-header">Switch profile (DEV)</div>
+          {ROLE_OPTIONS.map(role => (
+            <button key={role.value} className={`dropdown-item d-flex align-items-center${userType === role.value ? ' active' : ''}`} onClick={() => { onSwitch(role.value); setOpen(false); }}>
+              <span className="me-2">{role.icon}</span> {role.label}
+            </button>
+          ))}
+          <div className="dropdown-divider"></div>
+          <button className="dropdown-item text-danger" onClick={() => { onLogout(); setOpen(false); }}>Logout</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Helper: role-based route access
+const ROLE_ROUTES = {
+  ARTYSTA: [
+    '/posting', '/my-artwork', '/my-orders', '/my-sales', '/messages', '/profile', '/landing', '/view-painting', '/support'
+  ],
+  HOTEL: [
+    '/hotel-feed', '/my-orders', '/my-sales', '/messages', '/profile', '/landing', '/view-painting', '/support'
+  ],
+  GOSC: [
+    '/hotel-feed', '/my-orders', '/messages', '/profile', '/landing', '/view-painting', '/support'
+  ],
+  ADMIN: [
+    '/admin', '/messages', '/profile', '/landing', '/support'
+  ],
+};
+
+function isRouteAllowed(userType, path) {
+  if (!userType) return true; // allow landing, login, register, etc.
+  const allowed = ROLE_ROUTES[userType] || [];
+  // Allow dynamic routes like /view-painting/:id
+  return allowed.some(route => path.startsWith(route));
+}
+
+function ForbiddenPage() {
+  return <div className="container py-5 text-center"><h2>Access Forbidden</h2><p className="text-muted">You do not have permission to view this page.</p></div>;
+}
+
 function App() {
   const navLinkStyles = ({ isActive }) => isActive ? "nav-link active" : "nav-link";
   const { logout, userType, login: fakeLogin } = useSession();
@@ -401,44 +462,24 @@ function App() {
               <nav className="main-nav d-none d-md-flex align-items-center">
                 {renderNavLinks()}
               </nav>
-              <div className="profile-icon d-flex align-items-center">
-                <DemoToggleButton />
-                {userType ? (
-                  <div className="dropdown">
-                    <button className="btn p-0 border-0 me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                      <img src="/pfp.png" alt="Profil" width="40" height="40" className="rounded-circle" />
-                    </button>
-                    <ul className="dropdown-menu dropdown-menu-end">
-                      <li><NavLink to="/profile" className="dropdown-item">Profile</NavLink></li>
-                      <li><NavLink to="/change-password" className="dropdown-item">Change password</NavLink></li>
-                      <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
-                      <li><hr className="dropdown-divider" /></li>
-                      <li className="dropdown-header">Switch profile (DEV)</li>
-                      <li><button className="dropdown-item" onClick={() => handleSwitchProfile('ARTYSTA')}>Artist</button></li>
-                      <li><button className="dropdown-item" onClick={() => handleSwitchProfile('HOTEL')}>Hotel</button></li>
-                      <li><button className="dropdown-item" onClick={() => handleSwitchProfile('GOSC')}>Guest</button></li>
-                      <li><button className="dropdown-item" onClick={() => handleSwitchProfile('ADMIN')}>Admin</button></li>
-                    </ul>
-                  </div>
-                ) : null}
-              </div>
+              <ProfileDropdown userType={userType} onSwitch={handleSwitchProfile} onLogout={handleLogout} />
             </div>
           </header>
 
           <main className="flex-grow-1">
             <Routes>
               <Route path="/landing" element={<LandingPage />} />
-              <Route path="/posting" element={<AddArtworkForm />} />
-              <Route path="/my-artwork" element={<MyArtwork />} />
-              <Route path="/my-orders" element={<MyOrders />} />
-              <Route path="/my-sales" element={<MySales />} />
-              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/posting" element={isRouteAllowed(userType, '/posting') ? <AddArtworkForm /> : <ForbiddenPage />} />
+              <Route path="/my-artwork" element={isRouteAllowed(userType, '/my-artwork') ? <MyArtwork /> : <ForbiddenPage />} />
+              <Route path="/my-orders" element={isRouteAllowed(userType, '/my-orders') ? <MyOrders /> : <ForbiddenPage />} />
+              <Route path="/my-sales" element={isRouteAllowed(userType, '/my-sales') ? <MySales /> : <ForbiddenPage />} />
+              <Route path="/messages" element={isRouteAllowed(userType, '/messages') ? <MessagesPage /> : <ForbiddenPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/hotel-feed" element={<HotelFeed />} />
-              <Route path="/view-painting/:paintingId" element={<PaintingViewerPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/admin" element={<AdminPanelPage />} />
-              <Route path="/support" element={<SupportPage />} />
+              <Route path="/hotel-feed" element={isRouteAllowed(userType, '/hotel-feed') ? <HotelFeed /> : <ForbiddenPage />} />
+              <Route path="/view-painting/:paintingId" element={isRouteAllowed(userType, '/view-painting') ? <PaintingViewerPage /> : <ForbiddenPage />} />
+              <Route path="/profile" element={isRouteAllowed(userType, '/profile') ? <ProfilePage /> : <ForbiddenPage />} />
+              <Route path="/admin" element={isRouteAllowed(userType, '/admin') ? <AdminPanelPage /> : <ForbiddenPage />} />
+              <Route path="/support" element={isRouteAllowed(userType, '/support') ? <SupportPage /> : <ForbiddenPage />} />
               <Route path="/" element={<LandingPage />} />
               <Route path="*" element={<div className='container mt-4 text-center'><h2>404 - Page Not Found</h2></div>} />
             </Routes>

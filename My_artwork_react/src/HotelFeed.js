@@ -4,6 +4,7 @@ import { useSession } from './hooks/useSession';
 import { useToast } from './Toaster';
 import { useNavigate } from 'react-router-dom';
 import { useDemoMode } from './DemoModeContext';
+import './HotelFeed.css';
 
 // Demo artworks data
 const DEMO_ARTWORKS = [
@@ -11,19 +12,23 @@ const DEMO_ARTWORKS = [
     id: 1,
     title: 'Abstract Dreams',
     artistName: 'John Doe',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/32.jpg',
     artistId: 101,
     price: '$1,200',
     likes: 12,
-    image_url: 'https://picsum.photos/300/300?random=1',
+    image_url: 'https://picsum.photos/400/400?random=1',
+    description: 'A beautiful abstract painting full of color and movement.'
   },
   {
     id: 2,
     title: 'Ocean Waves',
     artistName: 'Jane Smith',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/44.jpg',
     artistId: 102,
     price: '$800',
     likes: 8,
-    image_url: 'https://picsum.photos/300/300?random=2',
+    image_url: 'https://picsum.photos/400/400?random=2',
+    description: 'Inspired by the sea and its endless energy.'
   },
   {
     id: 3,
@@ -159,10 +164,12 @@ function HotelFeed() {
       id: newId,
       title: 'New Artwork ' + newId,
       artistName: 'Demo Artist',
+      artistAvatar: 'https://randomuser.me/api/portraits/men/1.jpg',
       artistId: 999,
       price: '$999',
       likes: 0,
-      image_url: `https://picsum.photos/300/300?random=${newId}`,
+      image_url: `https://picsum.photos/400/400?random=${newId}`,
+      description: 'A new demo artwork.'
     };
     setArtworks([newArt, ...artworks]);
     toast('Artwork inserted.', 'info');
@@ -190,41 +197,39 @@ function HotelFeed() {
     navigate('/messages', { state: { userId: artistId } });
   };
 
-  if (loading) return <div className="text-center py-5">Ładowanie...</div>;
+  if (loading) return <div className="text-center py-5">Loading...</div>;
 
   return (
-    <div className="container mt-4">
+    <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Hotel Feed – Wszystkie dzieła</h2>
+        <h2 className="fw-bold">Gallery</h2>
         {demoMode && <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Artwork</button>}
       </div>
-      <div className="row">
+      <div className="row g-4 hotel-feed-grid">
         {artworks.map(art => (
-          <div className="col-md-6 col-lg-4 mb-4" key={art.id}>
-            <div className="artwork-item d-flex flex-column p-2 border rounded bg-white shadow-sm h-100">
-              <div className="artwork-image mb-2 text-center">
-                <img src={art.image_url || '/img.png'} alt={art.title || 'Dzieło'} className="img-fluid rounded" style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
+          <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={art.id}>
+            <div className="artwork-card shadow-sm rounded-4 h-100 d-flex flex-column">
+              <div className="artwork-image-wrapper position-relative">
+                <img src={art.image_url || '/img.png'} alt={art.title || 'Artwork'} className="artwork-image rounded-4 w-100" style={{ aspectRatio: '1/1', objectFit: 'cover' }} />
+                <div className="artwork-artist position-absolute top-0 start-0 m-2 d-flex align-items-center bg-white bg-opacity-75 rounded-pill px-2 py-1 shadow-sm">
+                  <img src={art.artistAvatar} alt={art.artistName} className="rounded-circle me-2" width={32} height={32} />
+                  <span className="fw-semibold">{art.artistName}</span>
+                </div>
               </div>
-              <div className="artwork-details flex-grow-1 d-flex flex-column">
-                <p className="fw-bold mb-1">{art.title}</p>
-                <p><strong>Artysta:</strong> {art.artistName || art.artistId}</p>
-                <p><strong>Price:</strong> {art.price}</p>
-                <p><small>Likes: {art.likes || 0}</small></p>
-                <div className="mt-auto text-end">
-                  {demoMode ? (
-                    <>
-                      <button className="btn btn-outline-primary btn-sm me-2" onClick={() => handleLikeDemo(art.id)}>Like</button>
-                      <button className="btn btn-outline-success btn-sm me-2" onClick={() => handleReserveDemo(art.id)}>Reserve</button>
-                      <button className="btn btn-outline-secondary btn-sm me-2" onClick={() => handleDMDemo(art.artistId)}>DM</button>
-                      <button className="btn btn-outline-danger btn-sm" onClick={() => handleDeleteDemo(art.id)}>Delete</button>
-                    </>
-                  ) : (
-                    <>
-                      <button className="btn btn-outline-primary btn-sm me-2" onClick={() => handleLike(art.id)}>Like</button>
-                      <button className="btn btn-outline-success btn-sm me-2" onClick={() => handleReserve(art.id)}>Reserve</button>
-                      <button className="btn btn-outline-secondary btn-sm" onClick={() => handleDM(art.artistId)}>DM</button>
-                    </>
-                  )}
+              <div className="artwork-card-body flex-grow-1 d-flex flex-column p-3">
+                <h5 className="fw-bold mb-1">{art.title}</h5>
+                <p className="text-muted small mb-2">{art.description}</p>
+                <div className="d-flex align-items-center mb-2">
+                  <span className="badge bg-light text-dark me-2">{art.price}</span>
+                  <span className="ms-auto text-muted small"><i className="bi bi-heart-fill text-danger me-1"></i>{art.likes || 0}</span>
+                </div>
+                <div className="mt-auto d-flex gap-2">
+                  <button className="btn btn-outline-primary btn-sm flex-fill" onClick={() => handleLikeDemo(art.id)}><i className="bi bi-heart"></i> Like</button>
+                  <button className="btn btn-outline-success btn-sm flex-fill" onClick={() => handleReserveDemo(art.id)}><i className="bi bi-cart-plus"></i> Reserve</button>
+                </div>
+                <div className="d-flex gap-2 mt-2">
+                  <button className="btn btn-outline-secondary btn-sm flex-fill" onClick={() => handleDMDemo(art.artistId)}><i className="bi bi-chat-dots"></i> DM</button>
+                  {demoMode && <button className="btn btn-outline-danger btn-sm flex-fill" onClick={() => handleDeleteDemo(art.id)}><i className="bi bi-trash"></i> Delete</button>}
                 </div>
               </div>
             </div>
