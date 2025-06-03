@@ -1,8 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Użyj Link do nawigacji wewnątrz aplikacji
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // Użyj Link do nawigacji wewnątrz aplikacji
 import './LandingPage.css'; // Dedykowany CSS dla tej strony
+import apiRequest from './api';
+import { useSession } from './hooks/useSession';
 
 function LandingPage() {
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login: doLogin, userType } = useSession();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setLoading(true);
+    try {
+      const data = await apiRequest('/ogolne/logowanie', {
+        method: 'POST',
+        body: { username: login, password: password }
+      });
+      if (data && data.token && data.userType) {
+        doLogin(data.token, data.userType);
+        setMessage('Zalogowano pomyślnie!');
+        if (data.userType === 'ARTYSTA') navigate('/my-artwork');
+        else if (data.userType === 'HOTEL') navigate('/hotel-feed');
+        else navigate('/my-orders');
+      } else {
+        setMessage('Nieprawidłowa odpowiedź z serwera.');
+      }
+    } catch (err) {
+      setMessage('Błąd logowania: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     // Zamiast content-wrapper, używamy fragmentu, bo layout jest w App.js
     <>
@@ -40,6 +74,12 @@ function LandingPage() {
               <img src="/google_icon.png" width="25" height="25" alt="Google icon" className="me-2 google-icon" /> {/* Zmniejszono ikonkę i dodano klasę */}
               Sign up with Google
             </button>
+            <form onSubmit={handleLogin} className="mt-3">
+              <input type="text" className="form-control mb-2" placeholder="Login" value={login} onChange={e => setLogin(e.target.value)} required />
+              <input type="password" className="form-control mb-2" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+              <button type="submit" className="btn btn-primary w-100" disabled={loading}>{loading ? 'Logging in...' : 'Log in'}</button>
+            </form>
+            {message && <div className="alert alert-info mt-2">{message}</div>}
             <p className="disclaimer-text small"> {/* Zmniejszono font */}
               By registering, you agree to the Terms of Use and Privacy Policy, including the Cookie Policy.
             </p>

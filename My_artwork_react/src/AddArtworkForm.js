@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AddArtworkForm.css'; // Importuj dedykowany CSS
+import apiRequest from './api';
+import { useToast } from './Toaster';
 
 // Helper function to get JWT token from localStorage
 const getToken = () => localStorage.getItem('jwtToken');
@@ -10,13 +12,14 @@ function AddArtworkForm() {
         title: '', dimensions: '', price: '', category: '', medium: '', style: '', date: '', description: '', imageUrl: ''
     });
     // State for image preview URL
-    const [imagePreview, setImagePreview] = useState('/img.png'); // Używamy /img.png z public
+    const [imagePreview, setImagePreview] = useState('');
     // State for JWT token management
     const [jwtToken, setJwtToken] = useState(getToken());
     const [tokenInput, setTokenInput] = useState('');
     const [tokenStatus, setTokenStatus] = useState('');
     // State for API messages
     const [message, setMessage] = useState({ type: '', text: '' });
+    const toast = useToast();
 
     // Update token status on initial load
     useEffect(() => {
@@ -25,7 +28,7 @@ function AddArtworkForm() {
 
     // Update image preview when imageUrl changes
     useEffect(() => {
-        setImagePreview(formData.imageUrl.trim() ? formData.imageUrl : '/img.png');
+        setImagePreview(formData.imageUrl.trim());
     }, [formData.imageUrl]);
 
     // --- Handlers ---
@@ -35,54 +38,40 @@ function AddArtworkForm() {
     };
     const handleReset = () => {
         setFormData({ title: '', dimensions: '', price: '', category: '', medium: '', style: '', date: '', description: '', imageUrl: '' });
-        setMessage({ type: '', text: '' });
-        console.log('Form reset.');
+        setImagePreview('');
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setMessage({ type: '', text: '' });
         const currentToken = getToken();
         if (!currentToken) {
-            setMessage({ type: 'danger', text: 'Błąd: Musisz być zalogowany (brak tokena JWT). Zapisz token.' });
+            toast('Błąd: Musisz być zalogowany (brak tokena JWT). Zapisz token.', 'danger');
             return;
         }
         const apiData = {
             title: formData.title, dimensions: formData.dimensions, price: parseFloat(formData.price),
             category: formData.category, medium: formData.medium, style: formData.style,
-            date: formData.date, description: formData.description
+            date: formData.date, description: formData.description, image_url: formData.imageUrl
         };
-        if (!apiData.title || !apiData.dimensions || isNaN(apiData.price) || apiData.price <= 0 || !apiData.category || !apiData.medium || !apiData.style || !apiData.date || !apiData.description) {
-            setMessage({ type: 'danger', text: 'Błąd: Wszystkie pola formularza są wymagane. Cena musi być poprawną liczbą dodatnią.' });
+        if (!apiData.title || !apiData.dimensions || isNaN(apiData.price) || apiData.price <= 0 || !apiData.category || !apiData.medium || !apiData.style || !apiData.date || !apiData.description || !apiData.image_url) {
+            toast('Błąd: Wszystkie pola formularza są wymagane. Cena musi być poprawną liczbą dodatnią. Musisz podać URL obrazu.', 'danger');
             return;
         }
-        console.log('Submitting data to API:', JSON.stringify(apiData));
-        setMessage({ type: 'info', text: 'Wysyłanie danych...' });
         try {
-            const response = await fetch('http://localhost:8080/artysta/dzielo', {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
-                body: JSON.stringify(apiData)
+            await apiRequest('/artysta/dzielo', {
+                method: 'POST',
+                body: apiData
             });
-            if (response.status === 201) {
-                const result = await response.json();
-                setMessage({ type: 'success', text: `Dzieło dodane pomyślnie! ID: ${result.id}` });
-                handleReset();
-            } else {
-                let errorText = `Błąd dodawania dzieła: ${response.status} ${response.statusText}`;
-                try { const errorResult = await response.json(); errorText += ` - ${errorResult.message || errorResult.error || JSON.stringify(errorResult)}`; }
-                catch (e) { console.debug("Could not parse error response body:", e); }
-                setMessage({ type: 'danger', text: errorText }); console.error('API Error:', errorText);
-                 if (response.status === 401 || response.status === 403) {setMessage({ type: 'danger', text: `${errorText}. Sprawdź, czy token jest poprawny.` });}
-            }
+            toast('Dzieło dodane pomyślnie!', 'success');
+            handleReset();
         } catch (error) {
-            console.error('Network or fetch error:', error);
-            setMessage({ type: 'danger', text: `Błąd sieci lub serwera: ${error.message}. Sprawdź połączenie i czy serwer API działa.` });
+            toast(`Błąd: ${error.message}`, 'danger');
         }
     };
     const handleTokenInputChange = (event) => { setTokenInput(event.target.value); };
     const saveTokenToStorage = () => {
         const trimmedToken = tokenInput.trim();
-        if (trimmedToken) { localStorage.setItem('jwtToken', trimmedToken); setJwtToken(trimmedToken); setTokenStatus('Token zapisany.'); setMessage({ type: 'success', text: 'Token JWT zapisany.' }); console.log('Token saved.'); }
-        else { localStorage.removeItem('jwtToken'); setJwtToken(null); setTokenStatus('Token usunięty.'); setMessage({ type: 'warning', text: 'Token JWT usunięty.' }); console.log('Token removed.'); }
+        if (trimmedToken) { localStorage.setItem('jwtToken', trimmedToken); setJwtToken(trimmedToken); setTokenStatus('Token zapisany.'); console.log('Token saved.'); }
+        else { localStorage.removeItem('jwtToken'); setJwtToken(null); setTokenStatus('Token usunięty.'); console.log('Token removed.'); }
         setTokenInput('');
     };
 
@@ -90,7 +79,7 @@ function AddArtworkForm() {
     return (
         <> {/* Zwracamy tylko zawartość */}
             {/* Sekcja zarządzania tokenem */}
-            <div className="token-section card card-body bg-light p-2 mb-4"> {/* Zwiększony margines dolny */}
+            <div className="token-section card card-body bg-light p-2 mb-4">
                 <div className="d-flex flex-wrap align-items-center ">
                     <label htmlFor="jwtTokenInput" className="form-label me-2 mb-1 mb-md-0 small fw-bold">Token JWT:</label>
                     <input type="password" id="jwtTokenInput" placeholder="Wklej token JWT" value={tokenInput} onChange={handleTokenInputChange}
@@ -100,15 +89,7 @@ function AddArtworkForm() {
                 <div className="mt-1 small text-muted">{tokenStatus}</div>
             </div>
 
-            <h1 className="text-center mb-4">Posting</h1> {/* Dodajemy tytuł strony */}
-
-            {/* Komunikaty */}
-            {message.text && (
-                <div className={`alert alert-${message.type} alert-dismissible fade show`} role="alert">
-                    {message.text}
-                    <button type="button" className="btn-close" onClick={() => setMessage({ type: '', text: '' })} aria-label="Close"></button>
-                </div>
-            )}
+            <h1 className="text-center mb-4">Posting</h1>
 
             {/* Formularz */}
             <form onSubmit={handleSubmit} onReset={handleReset}>
@@ -116,9 +97,13 @@ function AddArtworkForm() {
                     {/* Lewa Kolumna */}
                     <div className="col-md-5 mb-3">
                         <div className="image-preview-box border rounded p-2 text-center bg-light d-flex flex-column justify-content-center" style={{ minHeight: '350px' }}>
-                            <img src={imagePreview} alt="Podgląd dzieła" className="img-fluid mb-2 mx-auto"
-                                 style={{ maxHeight: '280px', objectFit: 'contain' }}
-                                 onError={(e) => { e.target.onerror = null; e.target.src = '/img.png'; }} />
+                            {imagePreview ? (
+                                <img src={imagePreview} alt="Podgląd dzieła" className="img-fluid mb-2 mx-auto"
+                                     style={{ maxHeight: '280px', objectFit: 'contain' }}
+                                     onError={(e) => { e.target.onerror = null; e.target.src = '/img.png'; }} />
+                            ) : (
+                                <div className="text-muted">Brak podglądu</div>
+                            )}
                             <input type="url" id="imageUrl" name="imageUrl" placeholder="Wklej URL obrazu do podglądu..."
                                    value={formData.imageUrl} onChange={handleInputChange} className="form-control form-control-sm mt-auto" />
                         </div>
@@ -154,4 +139,5 @@ function AddArtworkForm() {
         </>
     );
 }
+
 export default AddArtworkForm;

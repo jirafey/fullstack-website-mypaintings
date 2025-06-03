@@ -1,62 +1,120 @@
 import React, { useState, useEffect } from 'react';
 import './MyArtwork.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import apiRequest from './api';
+import { useSession } from './hooks/useSession';
+import { useToast } from './Toaster';
 
 const getToken = () => localStorage.getItem('jwtToken');
 const placeholderImg = '/img.png';
 
-const MOCK_ARTWORKS_DATA = { /* ... (dane testowe jak w poprzedniej odpowiedzi) ... */
-    dziela: [
-        { id: 101, date_of_post: "2024-12-11", price: "$600", hotel: "@NY_Hotel_Star", viewers: 139, likes: 12, image_url: "https://via.placeholder.com/150/771796", title: "Testowe Dzieło 1" },
-        { id: 102, date_of_post: "2024-12-10", price: "$800", hotel: "@AR_Hotel_VIP", viewers: 131, likes: 16, image_url: "https://via.placeholder.com/150/24f355", title: "Inny Obrazek Testowy" },
-        { id: 103, date_of_post: "2024-12-10", price: "$700", hotel: null, viewers: 221, likes: 61, image_url: "https://via.placeholder.com/150/d32776", title: "Dzieło bez hotelu" },
-        { id: 104, date_of_post: "2024-12-10", price: "$700", hotel: "@AR_Hotel_VIP", viewers: 220, likes: 68, image_url: "https://via.placeholder.com/150/f66b97", title: "Kolejne Arcydzieło" },
-        { id: 105, date_of_post: "2024-11-21", price: "$500", hotel: "Jakiś Hotel", viewers: 131, likes: 33, image_url: null, title: "Obraz bez URL" },
-        { id: 106, date_of_post: "2024-11-15", price: 500.50, hotel: "@TestHotel", viewers: 125, likes: 32, image_url: "https://via.placeholder.com/150/56a8c2", title: "Cena jako liczba" }
-    ]
-};
-
-
 function MyArtwork() {
-    const [artworks, setArtworks] = useState(MOCK_ARTWORKS_DATA.dziela);
-    const [loading, setLoading] = useState(false);
+    const [artworks, setArtworks] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
-    // Stany tokena pozostają
     const [jwtToken, setJwtToken] = useState(getToken());
     const [tokenInput, setTokenInput] = useState('');
     const [tokenStatus, setTokenStatus] = useState('');
+    const { userType } = useSession();
+    const toast = useToast();
 
-     useEffect(() => { setTokenStatus(getToken() ? 'Token jest w localStorage.' : 'Brak tokena w localStorage.'); }, []);
+    useEffect(() => {
+        setTokenStatus(getToken() ? 'Token jest w localStorage.' : 'Brak tokena w localStorage.');
+    }, []);
 
-    const handleDelete = (artworkId) => {
-        if (!window.confirm(`Czy na pewno chcesz (symulacyjnie) usunąć dzieło o ID: ${artworkId}?`)) return;
-        setActionMessage({ type: 'success', text: `Symulacja: Dzieło ${artworkId} usunięte z widoku.` });
-        console.log(`Simulating delete for artwork ID: ${artworkId}`);
-        setArtworks(prevArtworks => prevArtworks.filter(art => art.id !== artworkId));
-        // Nie wysyłamy fetch DELETE
+    useEffect(() => {
+        const fetchArtworks = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await apiRequest('/artysta/mojedziela');
+                if (data && Array.isArray(data.dziela)) {
+                    setArtworks(data.dziela);
+                } else {
+                    setError('Nieprawidłowy format danych z backendu.');
+                }
+            } catch (err) {
+                setError(`Błąd pobierania dzieł: ${err.message}`);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchArtworks();
+    }, [jwtToken]);
+
+    const handleDelete = async (artworkId) => {
+        if (!window.confirm(`Czy na pewno chcesz usunąć dzieło o ID: ${artworkId}?`)) return;
+        try {
+            await apiRequest(`/artysta/dzielo/${artworkId}`, { method: 'DELETE' });
+            toast('Dzieło usunięte.', 'success');
+            setArtworks(prevArtworks => prevArtworks.filter(art => art.id !== artworkId));
+        } catch (err) {
+            toast(`Błąd usuwania dzieła: ${err.message}`, 'danger');
+        }
     };
 
-     const formatPrice = (price) => { /* ... (bez zmian) ... */
+    const handleLike = async (artworkId) => {
+        try {
+            await apiRequest(`/hotel/painting/like/${artworkId}`, { method: 'POST' });
+            setArtworks(arts => arts.map(a => a.id === artworkId ? { ...a, likes: (a.likes || 0) + 1 } : a));
+            toast('Polubiono dzieło.', 'success');
+        } catch (err) {
+            toast(`Błąd polubienia: ${err.message}`, 'danger');
+        }
+    };
+
+    const handleUnlike = async (artworkId) => {
+        try {
+            await apiRequest(`/hotel/painting/like/${artworkId}`, { method: 'DELETE' });
+            setArtworks(arts => arts.map(a => a.id === artworkId ? { ...a, likes: Math.max((a.likes || 1) - 1, 0) } : a));
+            toast('Usunięto polubienie.', 'info');
+        } catch (err) {
+            toast(`Błąd usuwania polubienia: ${err.message}`, 'danger');
+        }
+    };
+
+    const handleReserve = async (artworkId) => {
+        try {
+            await apiRequest(`/wiadomosci/reservepainting/${artworkId}`, { method: 'POST' });
+            toast('Obraz zarezerwowany!', 'success');
+        } catch (err) {
+            toast(`Błąd rezerwacji: ${err.message}`, 'danger');
+        }
+    };
+
+    const formatPrice = (price) => {
         if (typeof price === 'number') { return `$${price.toFixed(2)}`; }
         if (typeof price === 'string' && price.startsWith('$')) { return price; }
         return price || 'N/A';
     };
-     const formatDate = (dateString) => { /* ... (bez zmian) ... */
-         if (!dateString) return 'N/A';
-         try { return new Date(dateString).toLocaleDateString('pl-PL'); }
-         catch (e) { return dateString; }
-     };
-     const handleTokenInputChange = (event) => { setTokenInput(event.target.value); };
-     const saveTokenToStorage = () => { /* ... (bez zmian, używa setActionMessage) ... */
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        try { return new Date(dateString).toLocaleDateString('pl-PL'); }
+        catch (e) { return dateString; }
+    };
+    const handleTokenInputChange = (event) => { setTokenInput(event.target.value); };
+    const saveTokenToStorage = () => {
         const trimmedToken = tokenInput.trim();
-        if (trimmedToken) { localStorage.setItem('jwtToken', trimmedToken); setJwtToken(trimmedToken); setTokenStatus('Token zapisany.'); setActionMessage({ type: 'success', text: 'Token JWT zapisany.' }); console.log('Token saved.'); }
-        else { localStorage.removeItem('jwtToken'); setJwtToken(null); setTokenStatus('Token usunięty.'); setActionMessage({ type: 'warning', text: 'Token JWT usunięty.' }); console.log('Token removed.'); }
+        if (trimmedToken) { localStorage.setItem('jwtToken', trimmedToken); setJwtToken(trimmedToken); setTokenStatus('Token zapisany.'); console.log('Token saved.'); }
+        else { localStorage.removeItem('jwtToken'); setJwtToken(null); setTokenStatus('Token usunięty.'); console.log('Token removed.'); }
         setTokenInput('');
     };
 
     const renderContent = () => {
-        if (artworks.length === 0) { return <div className="alert alert-info">Brak testowych dzieł.</div>; }
+        if (loading) {
+            return (
+                <div className="text-center py-5">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Ładowanie...</span>
+                    </div>
+                    <p className="mt-2">Ładowanie dzieł...</p>
+                </div>
+            );
+        }
+        if (error) {
+            return <div className="alert alert-danger">Błąd: {error}</div>;
+        }
+        if (artworks.length === 0) { return <div className="alert alert-info">Brak dzieł.</div>; }
         return (
             <div className="row">
                 {artworks.map(artwork => (
@@ -75,7 +133,18 @@ function MyArtwork() {
                                 <p><small>Viewers: {artwork.viewers || 0}</small></p>
                                 <p><small>Likes: {artwork.likes || 0}</small></p>
                                 <div className="mt-auto text-end">
-                                    <button className="btn btn-outline-danger btn-sm delete-button" onClick={() => handleDelete(artwork.id)} title="Usuń post (symulacja)">
+                                    <button className="btn btn-outline-primary btn-sm me-2" onClick={() => handleLike(artwork.id)} title="Like">
+                                        <i className="bi bi-hand-thumbs-up me-1"></i> Like
+                                    </button>
+                                    <button className="btn btn-outline-secondary btn-sm me-2" onClick={() => handleUnlike(artwork.id)} title="Unlike">
+                                        <i className="bi bi-hand-thumbs-down me-1"></i> Unlike
+                                    </button>
+                                    {(userType === 'GOSC' || userType === 'HOTEL') && (
+                                        <button className="btn btn-outline-success btn-sm me-2" onClick={() => handleReserve(artwork.id)} title="Reserve">
+                                            <i className="bi bi-cart-plus me-1"></i> Reserve
+                                        </button>
+                                    )}
+                                    <button className="btn btn-outline-danger btn-sm delete-button" onClick={() => handleDelete(artwork.id)} title="Usuń post">
                                         <i className="bi bi-x-lg me-1"></i> Delete post
                                     </button>
                                 </div>
@@ -100,17 +169,11 @@ function MyArtwork() {
                  <div className="mt-1 small text-muted">{tokenStatus}</div>
              </div>
 
-            <h1 className="text-center mb-4 page-title">My artwork (Test Data)</h1>
-
-            {actionMessage.text && (
-                <div className={`alert alert-${actionMessage.type} alert-dismissible fade show`} role="alert">
-                    {actionMessage.text}
-                    <button type="button" className="btn-close" onClick={() => setActionMessage({ type: '', text: '' })} aria-label="Close"></button>
-                </div>
-            )}
+            <h1 className="text-center mb-4 page-title">My artwork</h1>
 
             {renderContent()}
          </>
     );
 }
+
 export default MyArtwork;
