@@ -86,40 +86,6 @@ paths:
         '404':
           description: Obraz nie znaleziony
 
-  /hotel/sell/{image_id}:
-    post:
-      tags:
-        - Hotel
-      summary: Oznacz obraz jako sprzedany
-      description: Endpoint pozwala hotelowi oznaczyć obraz o podanym ID jako sprzedany.
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        - name: image_id
-          in: path
-          required: true
-          description: ID obrazu
-          schema:
-            type: integer
-            example: 123
-      responses:
-        '200':
-          description: Obraz został oznaczony jako sprzedany
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_sell'
-        '400':
-          description: Nieprawidłowe dane wejściowe
-        '401':
-          description: Brak autoryzacji
-        '404':
-          description: Obraz nie znaleziony
 
 
 
@@ -200,32 +166,6 @@ paths:
           description: Brak dostępu
 
 
-  /artysta/sales:
-    get:
-      tags:
-        - Artysta
-      summary: Pobierz listę sprzedanych dzieł artysty
-      description: Endpoint zwraca listę sprzedanych dzieł artysty wraz z linkami do zdjęć.
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_artysta_sales'
-        '401':
-          description: Brak autoryzacji
-        '403':
-          description: Brak dostępu
-
   /hotel/feed:
     get:
       tags:
@@ -305,99 +245,6 @@ paths:
         '401':
           description: Brak autoryzacji
 
-  /hotel/add-delivery-info/{idobrazu}:
-    post:
-      tags:
-        - Hotel
-      summary: Dodaj informacje o dostawie do obrazu
-      description: Endpoint pozwala dodać informacje o dostawie do obrazu o określonym ID.
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        - name: idobrazu
-          in: path
-          required: true
-          description: ID obrazu, do którego dodawane są informacje o dostawie
-          schema:
-            type: integer
-            example: 123
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/request_hotel_add_delivery_info'
-      responses:
-        '201':
-          description: Informacje o dostawie zostały dodane pomyślnie
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_add_delivery_info'
-        '400':
-          description: Nieprawidłowe dane wejściowe
-        '401':
-          description: Brak autoryzacji
-        '404':
-          description: Obraz nie znaleziony
-
-  /hotel/ownedpaintings:
-    get:
-      tags:
-        - Hotel
-      summary: Pobierz listę obrazów należących do hotelu
-      description: Endpoint zwraca listę obrazów należących do hotelu wraz z dodatkowymi informacjami, takimi jak tytuł, wymiary, artysta, status i link do obrazu.
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_ownedpaintings'
-        '400':
-          description: Nieprawidłowe dane wejściowe
-        '401':
-          description: Brak autoryzacji
-
-
-  /hotel/artysta/profil/{id_artysty}:
-    get:
-      tags:
-        - Hotel
-      summary: Pobierz link do profilu artysty
-      description: Endpoint zwraca link do profilu artysty o podanym ID.
-      parameters:
-        - name: id_artysty
-          in: path
-          description: ID artysty
-          required: true
-          schema:
-            type: integer
-            example: 123
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_artysta_profil'
-        '404':
-          description: Artysta nie znaleziony
-
-
   /wiadomosci/getconversations:
     get:
       tags:
@@ -422,38 +269,6 @@ paths:
         '401':
           description: Brak autoryzacji
 
-  /hotel/stronaobrazu/{obraz_id}:
-    get:
-      tags:
-        - Hotel
-      summary: Pobierz szczegóły obrazu
-      description: Endpoint zwraca szczegółowe informacje o obrazie wraz z URL do zdjęć (takie same pola jak /artysta/dzielo)
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        - name: obraz_id
-          in: path
-          description: ID obrazu
-          required: true
-          schema:
-            type: integer
-            example: 123
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_stronaobrazu'
-        '401':
-          description: Brak autoryzacji
-        '404':
-          description: Obraz nie znaleziony
 
   /hotel/stronaartysty/{artist_id}:
     get:
