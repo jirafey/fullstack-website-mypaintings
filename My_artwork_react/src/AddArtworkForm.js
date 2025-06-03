@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AddArtworkForm.css'; // Importuj dedykowany CSS
 import apiRequest from './api';
 import { useToast } from './Toaster';
+import { useDemoMode } from './DemoModeContext';
 
 // Helper function to get JWT token from localStorage
 const getToken = () => localStorage.getItem('jwtToken');
@@ -20,6 +21,9 @@ function AddArtworkForm() {
     // State for API messages
     const [message, setMessage] = useState({ type: '', text: '' });
     const toast = useToast();
+    const { demoMode } = useDemoMode();
+    // Demo: track added artworks
+    const [demoArtworks, setDemoArtworks] = useState([]);
 
     // Update token status on initial load
     useEffect(() => {
@@ -42,6 +46,22 @@ function AddArtworkForm() {
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (demoMode) {
+            // Validate fields
+            if (!formData.title || !formData.dimensions || !formData.price || !formData.category || !formData.medium || !formData.style || !formData.date || !formData.description || !formData.imageUrl) {
+                toast('All fields are required. (demo)', 'danger');
+                return;
+            }
+            setDemoArtworks([{
+                ...formData,
+                id: Date.now(),
+                price: `$${parseFloat(formData.price).toFixed(2)}`,
+                imageUrl: formData.imageUrl
+            }, ...demoArtworks]);
+            toast('Artwork added (demo)!', 'success');
+            handleReset();
+            return;
+        }
         const currentToken = getToken();
         if (!currentToken) {
             toast('Błąd: Musisz być zalogowany (brak tokena JWT). Zapisz token.', 'danger');
@@ -77,7 +97,7 @@ function AddArtworkForm() {
 
     // --- Render JSX ---
     return (
-        <> {/* Zwracamy tylko zawartość */}
+        <>
             {/* Sekcja zarządzania tokenem */}
             <div className="token-section card card-body bg-light p-2 mb-4">
                 <div className="d-flex flex-wrap align-items-center ">
@@ -136,6 +156,27 @@ function AddArtworkForm() {
                     </div> {/* End Right Column */}
                 </div> {/* End Main Row */}
             </form>
+
+            {/* Demo: Show added artworks */}
+            {demoMode && demoArtworks.length > 0 && (
+                <div className="mt-4">
+                    <h4>Recently Added Artworks (Demo)</h4>
+                    <div className="row">
+                        {demoArtworks.map(art => (
+                            <div className="col-md-4 mb-3" key={art.id}>
+                                <div className="card h-100">
+                                    <img src={art.imageUrl} alt={art.title} className="card-img-top" style={{ height: 180, objectFit: 'cover' }} />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{art.title}</h5>
+                                        <p className="card-text">{art.description}</p>
+                                        <p className="card-text"><strong>Price:</strong> {art.price}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </>
     );
 }

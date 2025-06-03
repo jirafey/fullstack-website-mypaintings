@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDemoMode } from './DemoModeContext';
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ function RegisterPage() {
   });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const { demoMode } = useDemoMode();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,6 +20,13 @@ function RegisterPage() {
     e.preventDefault();
     setMessage('');
     setLoading(true);
+    if (demoMode) {
+      setTimeout(() => {
+        setMessage('Demo registration successful! You can now explore the app.');
+        setLoading(false);
+      }, 800);
+      return;
+    }
     try {
       const response = await fetch('http://localhost:8080/ogolne/rejestracja', {
         method: 'POST',
@@ -70,6 +79,7 @@ function RegisterPage() {
         <button type="submit" className="btn btn-primary w-100" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
       </form>
       {message && <div className="alert alert-info mt-3">{message}</div>}
+      {demoMode && <div className="alert alert-info mt-3">Demo mode is ON. No real registration is performed.</div>}
     </div>
   );
 }
