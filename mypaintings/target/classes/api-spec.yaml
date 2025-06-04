@@ -506,6 +506,30 @@ paths:
         '404':
           description: Użytkownik nie znaleziony
 
+  /ogolne/avatar/{id}:
+    get:
+      tags:
+        - Ogolne
+      summary: Pobierz link do awataru użytkownika
+      description: Endpoint zwraca link do obrazu awataru użytkownika o podanym ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID użytkownika
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Sukces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response_ogolne_avatar_get'
+        '404':
+          description: Użytkownik nie znaleziony
+
   /gosc/reserve:
     post:
       tags:

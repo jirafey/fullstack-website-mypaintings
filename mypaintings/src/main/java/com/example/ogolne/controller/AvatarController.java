@@ -16,13 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-public class AvatarController implements OgolneApi {
+public class AvatarController {
 
     @Autowired
     private FileStorageService fileStorageService;
 
     @Autowired
-    private AvatarService avatarService;
+    private AvatarService AvatarService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -41,7 +41,6 @@ public class AvatarController implements OgolneApi {
         }
     }
 
-    @Override
     public ResponseEntity<ResponseOgolneAvatarUpdate> ogolneAvatarPut(
             @RequestHeader(value="Authorization", required=true) String authorization,
             @Valid @RequestBody RequestOgolneAvatarUpdate body) {
@@ -50,7 +49,7 @@ public class AvatarController implements OgolneApi {
         Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
 
         try {
-            String avatarUrl = avatarService.updateUserAvatar(userId, body.getAvatarUrl());
+            String avatarUrl = AvatarService.updateUserAvatar(userId, body.getAvatarUrl());
 
             ResponseOgolneAvatarUpdate response = new ResponseOgolneAvatarUpdate();
             response.setMessage("Link do awatara został zaktualizowany.");
@@ -62,9 +61,8 @@ public class AvatarController implements OgolneApi {
         }
     }
 
-    @Override
     public ResponseEntity<ResponseOgolneAvatarGet> ogolneAvatarIdGet(@PathVariable("id") Integer id) {
-        String avatarUrl = avatarService.getUserAvatarUrl(id.longValue());
+        String avatarUrl = AvatarService.getUserAvatarUrl(id.longValue());
 
         if (avatarUrl == null) {
             return ResponseEntity.notFound().build();
