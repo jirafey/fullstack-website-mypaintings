@@ -24,6 +24,7 @@ public class User {
     @Column(nullable = false)
     private UserType userType;
 
+
     // --- Gettery i Settery ---
     public Long getId() {
         return id;
@@ -63,6 +64,9 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
     }
 
     public enum UserType {

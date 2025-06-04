@@ -140,46 +140,47 @@ public class WiadomosciService {
             if (optionalDzielo.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        
+
             Dzielo dzielo = optionalDzielo.get();
-        
+            Long artystaId = dzielo.getArtystaId();  // Dodaj tę linię
+
             // Sprawdź czy użytkownik nie rezerwuje własnego obrazu
-            if (dzielo.getArtystaId().equals(userId)) {
+            if (artystaId.equals(userId)) {
                 ResponseWiadomosciReservepainting response = new ResponseWiadomosciReservepainting();
                 response.setMessage("Nie możesz zarezerwować własnego obrazu.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-        
+
             // Sprawdź czy obraz ma już aktywną rezerwację, która nie pozwala na nową
             List<Rezerwacja> istniejaceRezerwacje = rezerwacjaRepository.findByObrazId(obrazId);
             boolean czyMoznaZarezerwowac = true;
-        
+
             for (Rezerwacja rez : istniejaceRezerwacje) {
                 if (!Rezerwacja.isStatusAllowingNewReservation(rez.getStatus())) {
                     czyMoznaZarezerwowac = false;
                     break;
                 }
             }
-        
+
             if (!czyMoznaZarezerwowac) {
                 ResponseWiadomosciReservepainting response = new ResponseWiadomosciReservepainting();
                 response.setMessage("Ten obraz jest już zarezerwowany i nie może być ponownie zarezerwowany.");
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
             }
-        
+
             // Sprawdź czy obraz nie jest już zarezerwowany przez tego użytkownika
             Optional<Rezerwacja> istniejacaRezerwacja = rezerwacjaRepository.findByObrazIdAndUzytkownikId(obrazId, userId);
             if (istniejacaRezerwacja.isPresent()) {
                 Rezerwacja rezerwacja = istniejacaRezerwacja.get();
-            
+
                 // Jeśli rezerwacja jest anulowana lub odrzucona, możemy ją reaktywować
-                if (Rezerwacja.Status.CANCELLED.name().equals(rezerwacja.getStatus()) || 
-                    Rezerwacja.Status.REFUSED.name().equals(rezerwacja.getStatus())) {
-                
+                if (Rezerwacja.Status.CANCELLED.name().equals(rezerwacja.getStatus()) ||
+                        Rezerwacja.Status.REFUSED.name().equals(rezerwacja.getStatus())) {
+
                     rezerwacja.setStatus(Rezerwacja.Status.RESERVE_REQUESTED.name());
                     rezerwacja.setDataModyfikacji(OffsetDateTime.now());
                     rezerwacjaRepository.save(rezerwacja);
-                
+
                     ResponseWiadomosciReservepainting response = new ResponseWiadomosciReservepainting();
                     response.setMessage("Prośba o rezerwację została ponownie wysłana.");
                     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -189,23 +190,46 @@ public class WiadomosciService {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
                 }
             }
-        
+
+            // Najpierw znajdź wszystkie aktywne rezerwacje użytkownika z tym artystą
+            List<Rezerwacja> aktywneRezerwacjeZArtysta = rezerwacjaRepository
+                    .findByUzytkownikId(userId)
+                    .stream()
+                    .filter(r -> {
+                        // Pomiń rezerwacje ze statusami, które pozwalają na nową rezerwację
+                        if (Rezerwacja.isStatusAllowingNewReservation(r.getStatus())) {
+                            return false;
+                        }
+
+                        // Sprawdź czy rezerwacja dotyczy tego samego artysty
+                        Optional<Dzielo> dzieloRezerwacji = dzieloRepository.findById(r.getObrazId());  // Zmieniono nazwę zmiennej
+                        return dzieloRezerwacji.isPresent() && dzieloRezerwacji.get().getArtystaId().equals(artystaId);
+                    })
+                    .collect(Collectors.toList());
+
+            // Jeśli użytkownik ma już aktywną rezerwację z tym artystą
+            if (!aktywneRezerwacjeZArtysta.isEmpty()) {
+                ResponseWiadomosciReservepainting response = new ResponseWiadomosciReservepainting();
+                response.setMessage("Masz już aktywną rezerwację z tym artystą. Możesz rezerwować tylko jeden obraz na raz.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            }
+
             // Utwórz nową rezerwację
             Rezerwacja rezerwacja = new Rezerwacja();
             rezerwacja.setObrazId(obrazId);
             rezerwacja.setUzytkownikId(userId);
-            rezerwacja.setStatus(Rezerwacja.Status.RESERVE_REQUESTED.name()); // Początkowy status oczekujący na akceptację
+            rezerwacja.setStatus(Rezerwacja.Status.RESERVE_REQUESTED.name());
             rezerwacja.setDataUtworzenia(OffsetDateTime.now());
-        
+
             // Zapisz rezerwację
             rezerwacjaRepository.save(rezerwacja);
-        
+
             // Przygotuj odpowiedź
             ResponseWiadomosciReservepainting response = new ResponseWiadomosciReservepainting();
             response.setMessage("Prośba o rezerwację została wysłana.");
-        
+
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -712,6 +736,58 @@ public class WiadomosciService {
     }
 
 
+
+
+
+
+    public ResponseEntity<ResponseWiadomosciGetconversations> getConversations(String token) {
+        try {
+            // Usuń "Bearer " z tokena
+            String jwt = token.substring(7);
+
+            // Pobierz ID użytkownika z tokena JWT
+            Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
+
+            // Znajdź wszystkich unikalnych artystów, z którymi użytkownik wymieniał wiadomości
+            List<Long> artistIds = wiadomoscRepository.findDistinctArtistsByUserId(userId);
+
+            // Przygotuj listę konwersacji
+            List<ResponseWiadomosciGetconversationsConversations> conversations = new ArrayList<>();
+
+            for (Long artistId : artistIds) {
+                ResponseWiadomosciGetconversationsConversations conversation = new ResponseWiadomosciGetconversationsConversations();
+
+                // Ustaw avatar_url na dummy
+                conversation.setAvatarUrl("https://example.com/avatars/user123.png");
+
+                // Ustaw user_id na ID artysty
+                conversation.setUserId(artistId.intValue());
+
+                // Znajdź aktywną rezerwację (status inny niż refused, cancelled, finished)
+                Optional<Rezerwacja> activeReservation = rezerwacjaRepository
+                        .findByUzytkownikIdAndArtystaId(userId, artistId)
+                        .stream()
+                        .filter(r -> !Rezerwacja.Status.REFUSED.name().equals(r.getStatus()) &&
+                                !Rezerwacja.Status.CANCELLED.name().equals(r.getStatus()) &&
+                                !Rezerwacja.Status.FINISHED.name().equals(r.getStatus()))
+                        .findFirst();
+
+                // Ustaw id_transaction na null jeśli nie ma aktywnej rezerwacji, w przeciwnym razie na ID rezerwacji
+                conversation.setIdTransaction(activeReservation.map(Rezerwacja::getId).orElse(null));
+
+                conversations.add(conversation);
+            }
+
+            // Utwórz i zwróć odpowiedź
+            ResponseWiadomosciGetconversations response = new ResponseWiadomosciGetconversations();
+            response.setConversations(conversations);
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
 

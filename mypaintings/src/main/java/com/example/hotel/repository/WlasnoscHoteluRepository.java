@@ -15,4 +15,6 @@ public interface WlasnoscHoteluRepository extends JpaRepository<WlasnoscHotelu, 
     List<WlasnoscHotelu> findAllByArtystaIdAndStatus(Long artystaId, String sold);
 
     List<WlasnoscHotelu> findByHotelId(Long hotelId);
+
+    List<WlasnoscHotelu> findByHotelIdAndStatus(Long hotelId, String delivered);
 }

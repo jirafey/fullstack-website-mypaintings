@@ -166,31 +166,6 @@ paths:
           description: Brak dostępu
 
 
-  /hotel/feed:
-    get:
-      tags:
-        - Hotel
-      summary: Pobierz feed hotelu
-      description: Endpoint zwraca feed hotelu, czyli tablicę linków do obrazów wraz z nickiem artysty i linkiem do jego awatara.
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_feed'
-        '400':
-          description: Nieprawidłowe dane wejściowe
-        '401':
-          description: Brak autoryzacji
 
   /hotel/reservations:
     get:
@@ -245,63 +220,7 @@ paths:
         '401':
           description: Brak autoryzacji
 
-  /wiadomosci/getconversations:
-    get:
-      tags:
-        - Wiadomosci
-      summary: Pobierz listę konwersacji
-      description: Endpoint zwraca listę konwersacji z podstawowymi informacjami (URL awatara, ID użytkownika i ID transakcji)
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_wiadomosci_getconversations'
-        '401':
-          description: Brak autoryzacji
 
-
-  /hotel/stronaartysty/{artist_id}:
-    get:
-      tags:
-        - Hotel
-      summary: Pobierz dzieła artysty z informacją o polubieniach
-      description: Endpoint zwraca tablicę dzieł danego artysty z URL obrazów i informacją czy hotel je polubił
-      parameters:
-        - name: Authorization
-          in: header
-          description: Token JWT w formacie "Bearer {token}"
-          required: true
-          schema:
-            type: string
-            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        - name: artist_id
-          in: path
-          description: ID artysty
-          required: true
-          schema:
-            type: integer
-            example: 123
-      responses:
-        '200':
-          description: Sukces
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/response_hotel_stronaartysty'
-        '401':
-          description: Brak autoryzacji
-        '404':
-          description: Artysta nie znaleziony
 
   /ogolne/avatar:
     put:

@@ -7,6 +7,7 @@ import com.example.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,5 +84,13 @@ public class HotelController implements HotelApi {
     public ResponseEntity<ResponseHotelOwnedpaintings> hotelOwnedpaintingsGet(@RequestHeader(value="Authorization", required=true) String authorization) {
         return new HotelService().getOwnedPaintings(authorization);
     }
+
+
+    @GetMapping("/feed")
+    public ResponseEntity<ResponseHotelFeed> getHotelFeed(@RequestHeader("Authorization") String authorization) {
+        return hotelService.getHotelFeed(authorization);
+    }
+
+
 
 }

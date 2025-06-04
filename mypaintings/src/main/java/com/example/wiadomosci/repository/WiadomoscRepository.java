@@ -21,4 +21,12 @@ public interface WiadomoscRepository extends JpaRepository<Wiadomosc, Integer> {
             "(w2.recipientId = :userId AND w2.senderId = w.senderId)) " +
             "AND ((w.senderId = :userId) OR (w.recipientId = :userId))")
     List<Wiadomosc> findLatestMessagesByUser(@Param("userId") Long userId);
+
+
+    @Query("SELECT DISTINCT CASE WHEN w.senderId = :userId THEN w.recipientId ELSE w.senderId END " +
+            "FROM Wiadomosc w " +
+            "WHERE w.senderId = :userId OR w.recipientId = :userId")
+    List<Long> findDistinctArtistsByUserId(@Param("userId") Long userId);
+
+
 }

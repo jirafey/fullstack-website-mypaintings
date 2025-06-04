@@ -16,64 +16,64 @@ import javax.validation.constraints.*;
 
 
 public class ResponseOgolneAvatarGet   {
-  @JsonProperty("avatar_url")
-  private String avatarUrl = null;
+    @JsonProperty("avatar_url")
+    private String avatarUrl = null;
 
-  public ResponseOgolneAvatarGet avatarUrl(String avatarUrl) {
-    this.avatarUrl = avatarUrl;
-    return this;
-  }
+    public ResponseOgolneAvatarGet avatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+        return this;
+    }
 
-  /**
-   * Get avatarUrl
-   * @return avatarUrl
-   **/
-  @Schema(example = "https://example.com/avatars/user123.png", description = "")
-  
+    /**
+     * Get avatarUrl
+     * @return avatarUrl
+     **/
+    @Schema(example = "https://example.com/avatars/user123.png", description = "")
+
     public String getAvatarUrl() {
-    return avatarUrl;
-  }
-
-  public void setAvatarUrl(String avatarUrl) {
-    this.avatarUrl = avatarUrl;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
+        return avatarUrl;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
-    ResponseOgolneAvatarGet responseOgolneAvatarGet = (ResponseOgolneAvatarGet) o;
-    return Objects.equals(this.avatarUrl, responseOgolneAvatarGet.avatarUrl);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(avatarUrl);
-  }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ResponseOgolneAvatarGet {\n");
-    
-    sb.append("    avatarUrl: ").append(toIndentedString(avatarUrl)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ResponseOgolneAvatarGet responseOgolneAvatarGet = (ResponseOgolneAvatarGet) o;
+        return Objects.equals(this.avatarUrl, responseOgolneAvatarGet.avatarUrl);
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(avatarUrl);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ResponseOgolneAvatarGet {\n");
+
+        sb.append("    avatarUrl: ").append(toIndentedString(avatarUrl)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
