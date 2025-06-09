@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css'; // Globalne style
 import App from './App';
+import { DemoModeProvider } from './DemoModeContext';
 
 // Importuj Bootstrap CSS globalnie (zalecane)
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,7 +15,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <DemoModeProvider>
+        <App />
+      </DemoModeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

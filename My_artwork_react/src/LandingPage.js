@@ -71,7 +71,15 @@ function LandingPage() {
         <div className="row align-items-center"> {/* Wyśrodkowanie elementów w pionie */}
           {/* Obrazek */}
           <div className="col-md-4 offset-md-1 text-center text-md-start"> {/* Wyśrodkuj na małych, do lewej na większych */}
-            <img src="/landing_page_img.png" alt="Art Example" className="img-fluid landing-image" />
+            <img 
+              src={process.env.PUBLIC_URL + '/landing_page_img.png'} 
+              alt="Art Example" 
+              className="img-fluid landing-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://via.placeholder.com/400x300?text=Art+Example';
+              }}
+            />
           </div>
           {/* Statystyki */}
           <div className="col-md-2 stats">
@@ -84,10 +92,22 @@ function LandingPage() {
             <h1 className="display-5 mb-4"> Join us now! </h1> {/* Dodano margines dolny */}
             {/* Używamy Link z react-router-dom do przejścia do strony rejestracji (lub logowania) */}
             {!demoMode && <Link to="/register" className="btn btn-light sign-up-btn d-block mb-3 w-100">Sign up</Link>}
-            {!demoMode && <button className="btn btn-light sign-up-btn btn-google d-block mb-3 w-100">
-              <img src="/google_icon.png" width="25" height="25" alt="Google icon" className="me-2 google-icon" /> {/* Zmniejszono ikonkę i dodano klasę */}
-              Sign up with Google
-            </button>}
+            {!demoMode && (
+              <button className="btn btn-light sign-up-btn btn-google d-block mb-3 w-100">
+                <img 
+                  src={process.env.PUBLIC_URL + '/google_icon.png'} 
+                  width="25" 
+                  height="25" 
+                  alt="Google icon" 
+                  className="me-2 google-icon"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/25x25?text=G';
+                  }}
+                />
+                Sign up with Google
+              </button>
+            )}
             {!demoMode && <form onSubmit={handleLogin} className="mt-3">
               <input type="text" className="form-control mb-2" placeholder="Login" value={login} onChange={e => setLogin(e.target.value)} required />
               <input type="password" className="form-control mb-2" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />

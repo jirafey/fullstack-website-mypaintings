@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import { useSession } from './hooks/useSession';
 import { useNavigate } from 'react-router-dom';
 import { Toaster } from './Toaster';
@@ -10,12 +10,18 @@ import { FaPalette, FaHotel, FaUser, FaUserShield, FaChevronDown } from 'react-i
 import AddArtworkForm from './AddArtworkForm';
 import MyArtwork from './MyArtwork';
 import MyOrders from './MyOrders';
-import LandingPage from './LandingPage'; // Importuj LandingPage
+import LandingPage from './LandingPage';
 import RegisterPage from './RegisterPage';
 import MessagesPage from './MessagesPage';
 import HotelFeed from './HotelFeed';
 import PaintingViewerPage from './PaintingViewerPage';
 import ProfilePage from './ProfilePage';
+import PostsPage from './PostsPage';
+import OwnedPaintingsPage from './OwnedPaintingsPage';
+import ContactPage from './ContactPage';
+import FAQPage from './FAQPage';
+import AboutUsPage from './AboutUsPage';
+import TermsOfUsePage from './TermsOfUsePage';
 
 import './App.css';
 // Bootstrap i ikony importowane w index.js
@@ -366,16 +372,16 @@ function ProfileDropdown({ userType, onSwitch, onLogout }) {
 // Helper: role-based route access
 const ROLE_ROUTES = {
   ARTYSTA: [
-    '/posting', '/my-artwork', '/my-orders', '/my-sales', '/messages', '/profile', '/landing', '/view-painting', '/support'
+    '/posting', '/my-artwork', '/my-sales', '/messages', '/profile', '/landing', '/view-painting', '/support'
   ],
   HOTEL: [
-    '/hotel-feed', '/my-orders', '/my-sales', '/messages', '/profile', '/landing', '/view-painting', '/support'
+    '/hotel-feed', '/posts', '/owned-paintings', '/my-orders', '/messages', '/profile', '/landing', '/view-painting', '/support'
   ],
   GOSC: [
-    '/hotel-feed', '/my-orders', '/messages', '/profile', '/landing', '/view-painting', '/support'
+    '/my-orders', '/profile', '/landing', '/view-painting', '/support'
   ],
   ADMIN: [
-    '/admin', '/messages', '/profile', '/landing', '/support'
+    '/admin', '/posts', '/messages', '/profile', '/landing', '/view-painting', '/support'
   ],
 };
 
@@ -391,60 +397,60 @@ function ForbiddenPage() {
 }
 
 function App() {
-  const navLinkStyles = ({ isActive }) => isActive ? "nav-link active" : "nav-link";
-  const { logout, userType, login: fakeLogin } = useSession();
+  const { userType, login, logout } = useSession();
   const navigate = useNavigate();
+  const { demoMode, toggleDemoMode } = useDemoMode();
+
+  const navLinkStyles = ({ isActive }) => isActive ? "nav-link active" : "nav-link";
 
   const handleLogout = () => {
     logout();
     navigate('/landing');
   };
 
-  // DEV: Switch profile handler
   const handleSwitchProfile = (role) => {
-    // Set a dummy JWT and userType
-    fakeLogin('dev-jwt-token-' + role, role);
-    if (role === 'ARTYSTA') navigate('/my-artwork');
-    else if (role === 'HOTEL') navigate('/hotel-feed');
-    else if (role === 'ADMIN') navigate('/admin');
-    else navigate('/my-orders');
+    login('dev-jwt-token-' + role, role);
+    navigate('/landing');
   };
 
-  // Dynamic nav links based on userType
   const renderNavLinks = () => {
-    if (userType === 'ARTYSTA') {
-      return <>
-        <NavLink to="/posting" className={navLinkStyles}>Posting</NavLink>
-        <NavLink to="/my-artwork" className={navLinkStyles}>My artwork</NavLink>
-        <NavLink to="/my-orders" className={navLinkStyles}>My orders</NavLink>
-        <NavLink to="/my-sales" className={navLinkStyles}>My sales</NavLink>
-        <NavLink to="/messages" className={navLinkStyles}>Messages</NavLink>
-      </>;
-    } else if (userType === 'HOTEL') {
-      return <>
-        <NavLink to="/hotel-feed" className={navLinkStyles}>Gallery</NavLink>
-        <NavLink to="/my-orders" className={navLinkStyles}>My orders</NavLink>
-        <NavLink to="/my-sales" className={navLinkStyles}>My sales</NavLink>
-        <NavLink to="/messages" className={navLinkStyles}>Messages</NavLink>
-      </>;
-    } else if (userType === 'ADMIN') {
-      return <>
-        <NavLink to="/admin" className={navLinkStyles}>Admin panel</NavLink>
-        <NavLink to="/messages" className={navLinkStyles}>Messages</NavLink>
-      </>;
-    } else if (userType === 'GOSC') {
-      return <>
-        <NavLink to="/hotel-feed" className={navLinkStyles}>Gallery</NavLink>
-        <NavLink to="/my-orders" className={navLinkStyles}>My orders</NavLink>
-        <NavLink to="/messages" className={navLinkStyles}>Messages</NavLink>
-      </>;
-    } else {
-      // Not logged in
-      return <>
-        <NavLink to="/hotel-feed" className={navLinkStyles}>Gallery</NavLink>
-        <NavLink to="/login" className={navLinkStyles}>Login</NavLink>
-        <NavLink to="/register" className={navLinkStyles}>Register</NavLink>
-      </>;
+    if (!userType) return null;
+
+    switch (userType) {
+      case 'ARTYSTA':
+        return (
+          <>
+            <NavLink to="/posting" className={navLinkStyles}>Posting</NavLink>
+            <NavLink to="/my-artwork" className={navLinkStyles}>My Artwork</NavLink>
+            <NavLink to="/my-sales" className={navLinkStyles}>My Sales</NavLink>
+            <NavLink to="/messages" className={navLinkStyles}>Messages</NavLink>
+          </>
+        );
+      case 'HOTEL':
+        return (
+          <>
+            <NavLink to="/hotel-feed" className={navLinkStyles}>Hotel Feed</NavLink>
+            <NavLink to="/posts" className={navLinkStyles}>Posts</NavLink>
+            <NavLink to="/owned-paintings" className={navLinkStyles}>Owned Paintings</NavLink>
+            <NavLink to="/my-orders" className={navLinkStyles}>My Orders</NavLink>
+          </>
+        );
+      case 'GOSC':
+        return (
+          <>
+            <NavLink to="/my-orders" className={navLinkStyles}>My Orders</NavLink>
+          </>
+        );
+      case 'ADMIN':
+        return (
+          <>
+            <NavLink to="/admin" className={navLinkStyles}>Admin</NavLink>
+            <NavLink to="/posts" className={navLinkStyles}>Posts</NavLink>
+            <NavLink to="/messages" className={navLinkStyles}>Messages</NavLink>
+          </>
+        );
+      default:
+        return null;
     }
   };
 
@@ -462,7 +468,16 @@ function App() {
               <nav className="main-nav d-none d-md-flex align-items-center">
                 {renderNavLinks()}
               </nav>
-              <ProfileDropdown userType={userType} onSwitch={handleSwitchProfile} onLogout={handleLogout} />
+              <div className="d-flex align-items-center">
+                <button 
+                  className={"btn btn-sm " + (demoMode ? 'btn-warning' : 'btn-outline-secondary')} 
+                  onClick={toggleDemoMode} 
+                  style={{marginRight: 8}}
+                >
+                  {demoMode ? 'Demo mode: ON' : 'Demo mode: OFF'}
+                </button>
+                <ProfileDropdown userType={userType} onSwitch={handleSwitchProfile} onLogout={handleLogout} />
+              </div>
             </div>
           </header>
 
@@ -476,23 +491,28 @@ function App() {
               <Route path="/messages" element={isRouteAllowed(userType, '/messages') ? <MessagesPage /> : <ForbiddenPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/hotel-feed" element={isRouteAllowed(userType, '/hotel-feed') ? <HotelFeed /> : <ForbiddenPage />} />
+              <Route path="/posts" element={isRouteAllowed(userType, '/posts') ? <PostsPage /> : <ForbiddenPage />} />
+              <Route path="/owned-paintings" element={isRouteAllowed(userType, '/owned-paintings') ? <OwnedPaintingsPage /> : <ForbiddenPage />} />
               <Route path="/view-painting/:paintingId" element={isRouteAllowed(userType, '/view-painting') ? <PaintingViewerPage /> : <ForbiddenPage />} />
               <Route path="/profile" element={isRouteAllowed(userType, '/profile') ? <ProfilePage /> : <ForbiddenPage />} />
               <Route path="/admin" element={isRouteAllowed(userType, '/admin') ? <AdminPanelPage /> : <ForbiddenPage />} />
-              <Route path="/support" element={isRouteAllowed(userType, '/support') ? <SupportPage /> : <ForbiddenPage />} />
-              <Route path="/" element={<LandingPage />} />
-              <Route path="*" element={<div className='container mt-4 text-center'><h2>404 - Page Not Found</h2></div>} />
+              <Route path="/support" element={<SupportPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/about-us" element={<AboutUsPage />} />
+              <Route path="/terms-of-use" element={<TermsOfUsePage />} />
+              <Route path="*" element={<Navigate to="/landing" replace />} />
             </Routes>
           </main>
 
           <footer className="app-footer w-100 mt-auto">
             <div className="container-fluid text-center">
               <span className="me-2">myp@intings © 2024</span> |
-              <a href="#" className="footer-link">Support</a> |
-              <a href="#" className="footer-link">Terms of use</a> |
-              <a href="#" className="footer-link">Privacy policy</a> |
-              <a href="#" className="footer-link">Cookie policy</a> |
-              <a href="#" className="footer-link">Copyrights policy</a>
+              <NavLink to="/support" className="footer-link">Support</NavLink> |
+              <NavLink to="/terms-of-use" className="footer-link">Terms of use</NavLink> |
+              <NavLink to="/contact" className="footer-link">Contact</NavLink> |
+              <NavLink to="/faq" className="footer-link">FAQ</NavLink> |
+              <NavLink to="/about-us" className="footer-link">About us</NavLink>
             </div>
           </footer>
         </div>
