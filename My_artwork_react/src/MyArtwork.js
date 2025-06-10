@@ -306,12 +306,6 @@ function MyArtwork() {
                                                 <button className="btn btn-outline-primary btn-sm me-2" onClick={() => handleLikeDemo(artwork.id)} title="Like">
                                                     <i className="bi bi-hand-thumbs-up me-1"></i> Like
                                                 </button>
-                                                <button className="btn btn-outline-secondary btn-sm me-2" onClick={() => handleUnlikeDemo(artwork.id)} title="Unlike">
-                                                    <i className="bi bi-hand-thumbs-down me-1"></i> Unlike
-                                                </button>
-                                                <button className="btn btn-outline-success btn-sm me-2" onClick={() => handleReserveDemo(artwork.id)} title="Reserve">
-                                                    <i className="bi bi-cart-plus me-1"></i> Reserve
-                                                </button>
                                                 <button className="btn btn-outline-danger btn-sm delete-button" onClick={() => handleDeleteDemo(artwork.id)} title="Usuń post">
                                                     <i className="bi bi-x-lg me-1"></i> Delete post
                                                 </button>
