@@ -430,7 +430,6 @@ function App() {
         return (
           <>
             <NavLink to="/hotel-feed" className={navLinkStyles}>Hotel Feed</NavLink>
-            <NavLink to="/posts" className={navLinkStyles}>Posts</NavLink>
             <NavLink to="/owned-paintings" className={navLinkStyles}>Owned Paintings</NavLink>
             <NavLink to="/my-orders" className={navLinkStyles}>My Orders</NavLink>
           </>
