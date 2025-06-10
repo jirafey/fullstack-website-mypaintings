@@ -220,7 +220,6 @@ function HotelFeed() {
                 <h5 className="fw-bold mb-1">{art.title}</h5>
                 <p className="text-muted small mb-2">{art.description}</p>
                 <div className="d-flex align-items-center mb-2">
-                  {/*<span className="badge bg-light text-dark me-2">{art.price}</span>*/}
                   <span className="ms-auto text-muted small"><i className="bi bi-heart-fill text-danger me-1"></i>{art.likes || 0}</span>
                 </div>
                 <div className="mt-auto d-flex gap-2">
