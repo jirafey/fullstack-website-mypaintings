@@ -1,0 +1,42 @@
+.terms-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.terms-content section {
+  margin-bottom: 30px;
+}
+
+.terms-content h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.terms-content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.terms-content ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.terms-content li {
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.terms-content a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.terms-content a:hover {
+  text-decoration: underline;
+} 
