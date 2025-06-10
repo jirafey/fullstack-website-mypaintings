@@ -74,7 +74,6 @@ function MySales() {
       sold_on: new Date().toISOString().slice(0, 10),
       price: '$999',
       buyer: 'Demo Buyer',
-      status: 'In transit',
       image_url: `https://picsum.photos/300/300?random=${60 + newId}`,
     };
     setSales([newSale, ...sales]);
@@ -105,17 +104,6 @@ function MySales() {
                   <p><strong>Sold on:</strong> {sale.sold_on}</p>
                   <p><strong>Price:</strong> {sale.price}</p>
                   <p><strong>Buyer:</strong> {sale.buyer}</p>
-                  <p><strong>Status:</strong> {sale.status}</p>
-                  {demoMode && (
-                    <>
-                      <button className="btn btn-success btn-sm mt-2 me-2" onClick={() => handleConfirmDemo(sale.id)}>
-                        Confirm delivery
-                      </button>
-                      <button className="btn btn-danger btn-sm mt-2" onClick={() => handleCancelDemo(sale.id)}>
-                        Cancel sale
-                      </button>
-                    </>
-                  )}
                 </div>
               </div>
             </div>
