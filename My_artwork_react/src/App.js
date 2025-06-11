@@ -279,7 +279,7 @@ const ROLE_ROUTES = {
     '/posting', '/my-artwork', '/my-sales', '/messages', '/profile', '/landing', '/view-painting', '/support'
   ],
   HOTEL: [
-    '/hotel-feed', '/posts', '/owned-paintings', '/my-orders', '/messages', '/profile', '/landing', '/view-painting', '/support'
+    '/hotel-feed', '/posts', '/owned-paintings', '/my-orders', '/messages', '/profile', '/profile/', '/landing', '/view-painting', '/support'
   ],
   GOSC: [
     '/my-orders', '/profile', '/landing', '/view-painting', '/support'
@@ -398,7 +398,8 @@ function App() {
               <Route path="/posts" element={isRouteAllowed(userType, '/posts') ? <PostsPage /> : <ForbiddenPage />} />
               <Route path="/owned-paintings" element={isRouteAllowed(userType, '/owned-paintings') ? <OwnedPaintingsPage /> : <ForbiddenPage />} />
               <Route path="/view-painting/:paintingId" element={isRouteAllowed(userType, '/view-painting') ? <PaintingViewerPage /> : <ForbiddenPage />} />
-              <Route path="/profile" element={isRouteAllowed(userType, '/profile') ? <ProfilePage /> : <ForbiddenPage />} />
+              <Route path="/profile" element={userType === 'ARTYSTA' ? <ProfilePage isOwnProfile={true} /> : <ForbiddenPage />} />
+              <Route path="/profile/:userId" element={userType === 'HOTEL' ? <ProfilePage isOwnProfile={false} /> : <ForbiddenPage />} />
               <Route path="/admin" element={isRouteAllowed(userType, '/admin') ? <AdminPanelPage /> : <ForbiddenPage />} />
               <Route path="/support" element={<SupportPage />} />
               <Route path="/contact" element={<ContactPage />} />
