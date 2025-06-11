@@ -5,6 +5,7 @@ import { useToast } from './Toaster';
 import { useNavigate } from 'react-router-dom';
 import { useDemoMode } from './DemoModeContext';
 import './HotelFeed.css';
+import { Link } from 'react-router-dom';
 
 // Demo artworks data
 const DEMO_ARTWORKS = [
@@ -33,7 +34,8 @@ const DEMO_ARTWORKS = [
   {
     id: 3,
     title: 'City Lights',
-    artistName: 'Alex Brown',
+    artistName: 'Alexandra Brown',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/43.jpg',
     artistId: 103,
     price: '$1,500',
     likes: 20,
@@ -43,6 +45,7 @@ const DEMO_ARTWORKS = [
     id: 4,
     title: 'Forest Path',
     artistName: 'Emily White',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/21.jpg',
     artistId: 104,
     price: '$950',
     likes: 5,
@@ -52,6 +55,7 @@ const DEMO_ARTWORKS = [
     id: 5,
     title: 'Golden Hour',
     artistName: 'Chris Green',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/2.jpg',
     artistId: 105,
     price: '$2,000',
     likes: 17,
@@ -59,66 +63,103 @@ const DEMO_ARTWORKS = [
   },
   {
     id: 6,
-    title: 'Urban Jungle',
-    artistName: 'Pat Lee',
+    title: 'Evening Glow',
+    artistName: 'Liam Stone',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/45.jpg',
     artistId: 106,
     price: '$1,100',
-    likes: 9,
+    likes: 6,
     image_url: 'https://picsum.photos/300/300?random=6',
   },
   {
     id: 7,
-    title: 'Sunset Boulevard',
-    artistName: 'Morgan Black',
+    title: 'Violet Breeze',
+    artistName: 'Mia Rose',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/36.jpg',
     artistId: 107,
-    price: '$1,800',
+    price: '$990',
     likes: 14,
     image_url: 'https://picsum.photos/300/300?random=7',
   },
   {
     id: 8,
-    title: 'Blue Silence',
-    artistName: 'Taylor Red',
+    title: 'Golden Horizon',
+    artistName: 'Noah Reed',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/53.jpg',
     artistId: 108,
-    price: '$1,300',
+    price: '$1,450',
     likes: 11,
     image_url: 'https://picsum.photos/300/300?random=8',
   },
   {
     id: 9,
-    title: 'Mountain Mist',
-    artistName: 'Jordan Violet',
+    title: 'Mystic Woods',
+    artistName: 'Isabella Lane',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/29.jpg',
     artistId: 109,
-    price: '$1,600',
-    likes: 7,
+    price: '$1,200',
+    likes: 9,
     image_url: 'https://picsum.photos/300/300?random=9',
   },
   {
     id: 10,
-    title: 'Desert Rose',
-    artistName: 'Casey Blue',
+    title: 'Blue Symphony',
+    artistName: 'James Black',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/60.jpg',
     artistId: 110,
-    price: '$1,400',
-    likes: 10,
+    price: '$1,600',
+    likes: 18,
     image_url: 'https://picsum.photos/300/300?random=10',
   },
   {
     id: 11,
-    title: 'Night Reflections',
-    artistName: 'Robin Gold',
+    title: 'Crimson Sky',
+    artistName: 'Olivia Night',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/18.jpg',
     artistId: 111,
-    price: '$1,700',
-    likes: 13,
+    price: '$1,300',
+    likes: 7,
     image_url: 'https://picsum.photos/300/300?random=11',
   },
   {
     id: 12,
-    title: 'Spring Fields',
-    artistName: 'Sky Silver',
+    title: 'Frozen Lake',
+    artistName: 'Ethan West',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/12.jpg',
     artistId: 112,
     price: '$1,250',
-    likes: 6,
+    likes: 5,
     image_url: 'https://picsum.photos/300/300?random=12',
+  },
+  {
+    id: 13,
+    title: 'Rose Garden',
+    artistName: 'Sophia Bloom',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/57.jpg',
+    artistId: 113,
+    price: '$980',
+    likes: 15,
+    image_url: 'https://picsum.photos/300/300?random=13',
+  },
+  {
+    id: 14,
+    title: 'Canyon Echoes',
+    artistName: 'Daniel Flint',
+    artistAvatar: 'https://randomuser.me/api/portraits/men/24.jpg',
+    artistId: 114,
+    price: '$1,750',
+    likes: 19,
+    image_url: 'https://picsum.photos/300/300?random=14',
+  },
+  {
+    id: 15,
+    title: 'Silent Storm',
+    artistName: 'Emma Frost',
+    artistAvatar: 'https://randomuser.me/api/portraits/women/66.jpg',
+    artistId: 115,
+    price: '$1,380',
+    likes: 13,
+    image_url: 'https://picsum.photos/300/300?random=15',
   },
 ];
 
@@ -201,6 +242,19 @@ function HotelFeed() {
 
   return (
     <div className="container py-4">
+      {/* Following Artists */}
+      <div className="mb-4">
+        <h5 className="mb-2">Following Artists</h5>
+        <div className="d-flex overflow-auto gap-3">
+          {[101, 102, 103, 104].map(id => (
+              <Link to={`/profile/${id}`} key={id} className="d-flex flex-column align-items-center text-decoration-none text-dark">
+                <img src={`https://randomuser.me/api/portraits/${id % 2 === 0 ? 'men' : 'women'}/${id % 100}.jpg`} alt="Artist" className="rounded-circle mb-1" width={48} height={48} />
+                <span className="small text-center">DemoArtist{id}</span>
+              </Link>
+          ))}
+        </div>
+      </div>
+
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="fw-bold">Gallery</h2>
         {demoMode && <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Artwork</button>}
@@ -211,10 +265,17 @@ function HotelFeed() {
             <div className="artwork-card shadow-sm rounded-4 h-100 d-flex flex-column">
               <div className="artwork-image-wrapper position-relative">
                 <img src={art.image_url || '/img.png'} alt={art.title || 'Artwork'} className="artwork-image rounded-4 w-100" style={{ aspectRatio: '1/1', objectFit: 'cover' }} />
-                <div className="artwork-artist position-absolute top-0 start-0 m-2 d-flex align-items-center bg-white bg-opacity-75 rounded-pill px-2 py-1 shadow-sm">
-                  <img src={art.artistAvatar} alt={art.artistName} className="rounded-circle me-2" width={32} height={32} />
-                  <span className="fw-semibold">{art.artistName}</span>
-                </div>
+
+                <Link
+                    to={`/profile/${art.artistId}`}
+                    className="artwork-artist-mini"
+                >
+                  <img src={art.artistAvatar} alt={art.artistName} />
+                  <span>{art.artistName}</span>
+                </Link>
+
+
+
               </div>
               <div className="artwork-card-body flex-grow-1 d-flex flex-column p-3">
                 <h5 className="fw-bold mb-1">{art.title}</h5>

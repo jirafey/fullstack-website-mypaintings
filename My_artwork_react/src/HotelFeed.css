@@ -52,6 +52,40 @@
 .artwork-card:hover {
   transform: translateY(-8px) scale(1.03) rotate(0.5deg);
 }
+.artwork-artist-mini {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0.25rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 5;
+}
+
+.artwork-artist-mini img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.artwork-artist-mini span {
+  margin-left: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
 
 @keyframes pulse {
   0% { transform: scale(1); }
