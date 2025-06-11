@@ -68,6 +68,8 @@ function ProfilePage() {
   const showToast = useToast();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
+
 
   useEffect(() => {
     // For demo purposes, we'll use the DEMO_DATA
@@ -114,8 +116,25 @@ function ProfilePage() {
           <div className="stat">
             <span className="stat-value">{profile.stats.likes}</span>
             <span className="stat-label">Likes</span>
+            {userType === 'HOTEL' && (
+                <div className="mt-2">
+                  <button
+                      className={`btn btn-sm me-2 ${isFollowing ? 'btn-primary' : 'btn-outline-primary'}`}
+                      onClick={() => setIsFollowing(!isFollowing)}
+                  >
+                    {isFollowing ? 'Following' : 'Follow'}
+                  </button>
+                  <button
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={() => window.location.href = '/messages'}
+                  >
+                    Message
+                  </button>
+                </div>
+            )}
           </div>
         </div>
+
 
         {/* Artworks Grid */}
         {profile.artworks.length > 0 && (

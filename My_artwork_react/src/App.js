@@ -12,6 +12,7 @@ import MyArtwork from './MyArtwork';
 import MyOrders from './MyOrders';
 import LandingPage from './LandingPage';
 import RegisterPage from './RegisterPage';
+import LoginPage from './LoginPage';
 import MessagesPage from './MessagesPage';
 import HotelFeed from './HotelFeed';
 import PaintingViewerPage from './PaintingViewerPage';
@@ -392,6 +393,7 @@ function App() {
               <Route path="/my-sales" element={isRouteAllowed(userType, '/my-sales') ? <MySales /> : <ForbiddenPage />} />
               <Route path="/messages" element={isRouteAllowed(userType, '/messages') ? <MessagesPage /> : <ForbiddenPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/hotel-feed" element={isRouteAllowed(userType, '/hotel-feed') ? <HotelFeed /> : <ForbiddenPage />} />
               <Route path="/posts" element={isRouteAllowed(userType, '/posts') ? <PostsPage /> : <ForbiddenPage />} />
               <Route path="/owned-paintings" element={isRouteAllowed(userType, '/owned-paintings') ? <OwnedPaintingsPage /> : <ForbiddenPage />} />
