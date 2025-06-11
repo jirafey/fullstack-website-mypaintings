@@ -142,6 +142,8 @@ function LandingPage() {
                   <Link to="/view-painting/1" className="btn btn-outline-primary">Demo Painting (simulate QR)</Link>
                   <Link to="/messages" className="btn btn-outline-primary">Go to Messages</Link>
                   <Link to="/my-orders" className="btn btn-outline-primary">Go to Orders</Link>
+                  <Link to="/buy" className="btn btn-outline-success">Demo Purchase</Link>
+
                 </div>
                 <div className="text-muted small">You can instantly switch roles and access any part of the app for demo/testing.</div>
               </div>

@@ -1,0 +1,19 @@
+.painting-image-wrapper {
+    max-width: 50%;
+    max-height: 50%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin: 0 auto;
+    display: block;
+}
+
+.reserve{
+    margin: auto;
+    text-align: center;
+}
+
+.button-reserve{
+    max-width: 50%;
+    margin-bottom: 1%;
+}

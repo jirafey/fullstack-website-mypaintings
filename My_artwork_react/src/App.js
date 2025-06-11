@@ -24,6 +24,7 @@ import FAQPage from './FAQPage';
 import AboutUsPage from './AboutUsPage';
 import TermsOfUsePage from './TermsOfUsePage';
 import MySales from './MySales';
+import PaintingBuyPage from './PaintingBuyPage';
 
 import './App.css';
 // Bootstrap i ikony importowane w index.js
@@ -398,6 +399,7 @@ function App() {
               <Route path="/posts" element={isRouteAllowed(userType, '/posts') ? <PostsPage /> : <ForbiddenPage />} />
               <Route path="/owned-paintings" element={isRouteAllowed(userType, '/owned-paintings') ? <OwnedPaintingsPage /> : <ForbiddenPage />} />
               <Route path="/view-painting/:paintingId" element={isRouteAllowed(userType, '/view-painting') ? <PaintingViewerPage /> : <ForbiddenPage />} />
+              <Route path="/buy" element={<PaintingBuyPage />} />
               <Route path="/profile" element={userType === 'ARTYSTA' ? <ProfilePage isOwnProfile={true} /> : <ForbiddenPage />} />
               <Route path="/profile/:userId" element={userType === 'HOTEL' ? <ProfilePage isOwnProfile={false} /> : <ForbiddenPage />} />
               <Route path="/admin" element={isRouteAllowed(userType, '/admin') ? <AdminPanelPage /> : <ForbiddenPage />} />

@@ -9,103 +9,153 @@ const placeholderImg = '/img.png'; // Używamy tego samego placeholdera
 
 // Demo orders data
 const DEMO_ORDERS = [
-  {
-    id: 1,
-    bought_on: '2024-05-01',
-    price: '$1,200',
-    hotel: 'Grand Hotel',
-    status: 'Waiting for payment',
-    image_url: 'https://picsum.photos/300/300?random=41',
-  },
-  {
-    id: 2,
-    bought_on: '2024-04-15',
-    price: '$800',
-    hotel: 'Seaside Resort',
-    status: 'Waiting to be sent',
-    image_url: 'https://picsum.photos/300/300?random=42',
-  },
-  {
-    id: 3,
-    bought_on: '2024-03-20',
-    price: '$1,500',
-    hotel: 'Urban Inn',
-    status: 'Sent by the hotel',
-    image_url: 'https://picsum.photos/300/300?random=43',
-  },
-  {
-    id: 4,
-    bought_on: '2024-02-10',
-    price: '$950',
-    hotel: 'Forest Lodge',
-    status: 'Confirmed',
-    image_url: 'https://picsum.photos/300/300?random=44',
-  },
-  {
-    id: 5,
-    bought_on: '2024-01-05',
-    price: '$2,000',
-    hotel: 'Sunset Suites',
-    status: 'Waiting for payment',
-    image_url: 'https://picsum.photos/300/300?random=45',
-  },
-  {
-    id: 6,
-    bought_on: '2023-12-22',
-    price: '$1,100',
-    hotel: 'City Center Hotel',
-    status: 'Waiting to be sent',
-    image_url: 'https://picsum.photos/300/300?random=46',
-  },
-  {
-    id: 7,
-    bought_on: '2023-11-30',
-    price: '$1,800',
-    hotel: 'Boulevard Hotel',
-    status: 'Sent by the hotel',
-    image_url: 'https://picsum.photos/300/300?random=47',
-  },
-  {
-    id: 8,
-    bought_on: '2023-10-18',
-    price: '$1,300',
-    hotel: 'Blue Lagoon',
-    status: 'Confirmed',
-    image_url: 'https://picsum.photos/300/300?random=48',
-  },
-  {
-    id: 9,
-    bought_on: '2023-09-05',
-    price: '$1,600',
-    hotel: 'Mountain Retreat',
-    status: 'Waiting for payment',
-    image_url: 'https://picsum.photos/300/300?random=49',
-  },
-  {
-    id: 10,
-    bought_on: '2023-08-12',
-    price: '$1,400',
-    hotel: 'Desert Oasis',
-    status: 'Waiting to be sent',
-    image_url: 'https://picsum.photos/300/300?random=50',
-  },
-  {
-    id: 11,
-    bought_on: '2023-07-01',
-    price: '$1,700',
-    hotel: 'Night Hotel',
-    status: 'Sent by the hotel',
-    image_url: 'https://picsum.photos/300/300?random=51',
-  },
-  {
-    id: 12,
-    bought_on: '2023-06-15',
-    price: '$1,250',
-    hotel: 'Spring Inn',
-    status: 'Confirmed',
-    image_url: 'https://picsum.photos/300/300?random=52',
-  },
+    {
+        id: 1,
+        bought_on: '2024-05-01',
+        reserved_on: '2024-04-30',
+        paid_on: '-',
+        buyer: 'Anna Kowalska',
+        dimensions: '100cm x 80cm',
+        price: '$1,200',
+        hotel: 'Grand Hotel',
+        status: 'Waiting for payment',
+        image_url: 'https://picsum.photos/300/300?random=41',
+    },
+    {
+        id: 2,
+        bought_on: '2024-04-15',
+        reserved_on: '2024-04-10',
+        paid_on: '2024-05-01',
+        buyer: 'John Smith',
+        dimensions: '90cm x 60cm',
+        price: '$800',
+        hotel: 'Seaside Resort',
+        status: 'Waiting to be sent',
+        image_url: 'https://picsum.photos/300/300?random=42',
+    },
+    {
+        id: 3,
+        bought_on: '2024-03-20',
+        reserved_on: '2024-03-18',
+        paid_on: '2024-03-20',
+        buyer: 'Emily Davis',
+        dimensions: '120cm x 100cm',
+        price: '$1,500',
+        hotel: 'Urban Inn',
+        status: 'Sent by the hotel',
+        image_url: 'https://picsum.photos/300/300?random=43',
+    },
+    {
+        id: 4,
+        bought_on: '2024-02-10',
+        reserved_on: '2024-02-09',
+        paid_on: '2024-02-10',
+        buyer: 'Michael Johnson',
+        dimensions: '80cm x 70cm',
+        price: '$950',
+        hotel: 'Forest Lodge',
+        status: 'Confirmed',
+        image_url: 'https://picsum.photos/300/300?random=44',
+    },
+    {
+        id: 5,
+        bought_on: '2024-01-05',
+        reserved_on: '2024-01-02',
+        paid_on: '-',
+        buyer: 'Sara Lee',
+        dimensions: '70cm x 70cm',
+        price: '$2,000',
+        hotel: 'Sunset Suites',
+        status: 'Waiting for payment',
+        image_url: 'https://picsum.photos/300/300?random=45',
+    },
+    {
+        id: 6,
+        bought_on: '2023-12-22',
+        reserved_on: '2023-12-20',
+        paid_on: '2024-05-02',
+        buyer: 'David Kim',
+        dimensions: '100cm x 120cm',
+        price: '$1,100',
+        hotel: 'City Center Hotel',
+        status: 'Waiting to be sent',
+
+        image_url: 'https://picsum.photos/300/300?random=46',
+    },
+    {
+        id: 7,
+        bought_on: '2023-11-30',
+        reserved_on: '2023-11-28',
+        paid_on: '2023-11-30',
+        buyer: 'Laura Wilson',
+        dimensions: '75cm x 60cm',
+        price: '$1,800',
+        hotel: 'Boulevard Hotel',
+        status: 'Sent by the hotel',
+        image_url: 'https://picsum.photos/300/300?random=47',
+    },
+    {
+        id: 8,
+        bought_on: '2023-10-18',
+        reserved_on: '2023-10-17',
+        paid_on: '2023-10-18',
+        buyer: 'Robert Brown',
+        dimensions: '65cm x 85cm',
+        price: '$1,300',
+        hotel: 'Blue Lagoon',
+        status: 'Confirmed',
+        image_url: 'https://picsum.photos/300/300?random=48',
+    },
+    {
+        id: 9,
+        bought_on: '2023-09-05',
+        reserved_on: '2023-09-01',
+        paid_on: '-',
+        buyer: 'Natalie Adams',
+        dimensions: '90cm x 90cm',
+        price: '$1,600',
+        hotel: 'Mountain Retreat',
+        status: 'Waiting for payment',
+        image_url: 'https://picsum.photos/300/300?random=49',
+    },
+    {
+        id: 10,
+        bought_on: '2023-08-12',
+        reserved_on: '2023-08-10',
+        paid_on: '2024-05-01',
+        buyer: 'William Harris',
+        dimensions: '60cm x 60cm',
+        price: '$1,400',
+        hotel: 'Desert Oasis',
+        status: 'Waiting to be sent',
+        image_url: 'https://picsum.photos/300/300?random=50',
+    },
+    {
+        id: 11,
+        bought_on: '2023-07-01',
+        reserved_on: '2023-06-29',
+        paid_on: '2023-07-01',
+        buyer: 'Chloe Martinez',
+        dimensions: '50cm x 70cm',
+        price: '$1,700',
+        hotel: 'Night Hotel',
+        status: 'Sent by the hotel',
+        image_url: 'https://picsum.photos/300/300?random=51',
+    },
+    {
+        id: 12,
+        bought_on: '2023-06-15',
+        reserved_on: '2023-06-12',
+        paid_on: '2023-06-15',
+        buyer: 'Daniel Thompson',
+        dimensions: '80cm x 60cm',
+        price: '$1,250',
+        hotel: 'Spring Inn',
+        status: 'Confirmed',
+        image_url: 'https://picsum.photos/300/300?random=52',
+    },
 ];
+
 
 function MyOrders() {
     const [orders, setOrders] = useState([]);
@@ -221,11 +271,11 @@ function MyOrders() {
 
         return (
             <div className="container py-4">
-                {demoMode && (
-                    <div className="mb-3 text-end">
-                        <button className="demo-button" onClick={handleInsertDemo}></button>
-                    </div>
-                )}
+                {/*{demoMode && (*/}
+                {/*    <div className="mb-3 text-end">*/}
+                {/*        <button className="demo-button" onClick={handleInsertDemo}></button>*/}
+                {/*    </div>*/}
+                {/*)}*/}
                 <div className="row justify-content-center">
                     <div className="col-lg-10">
                         <div className="card shadow-lg rounded-4 p-4 mb-4 orders-card">
@@ -241,6 +291,15 @@ function MyOrders() {
                                                     <div>
                                                         <div className="text-muted"> From: {order.hotel}</div>
                                                         <div className="text-muted">Bought on: {order.bought_on}</div>
+                                                        {userType === 'HOTEL' && (
+                                                            <>
+                                                                {order.buyer && <div className="text-muted">Buyer: {order.buyer}</div>}
+                                                                {order.dimensions && <div className="text-muted">Size: {order.dimensions}</div>}
+                                                                {order.reserved_on && <div className="text-muted">Reserved: {order.reserved_on}</div>}
+                                                                {order.paid_on && <div className="text-muted">Paid: {order.paid_on}</div>}
+                                                            </>
+                                                        )}
+
                                                         <div className="mb-2"><span className="text-muted">Price: {order.price}</span></div>
                                                         <div className={`status-badge ${getStatusClass(order.status)} mb-4`}>{order.status}</div>
                                                     </div>
@@ -249,13 +308,16 @@ function MyOrders() {
                                                 <div className="d-flex gap-2">
                                                     {userType !== 'GOSC' && (
                                                         <>
-                                                            {order.status === 'Waiting for payment' && (
-                                                                <button className="btn btn-success btn-sm rounded-pill flex-fill" onClick={() => handleConfirmDeliveryDemo(order.id)}>Confirm Delivery</button>
+                                                            {userType === 'HOTEL' && (
+                                                                <>
+                                                                    <button className="btn btn-outline-success btn-sm rounded-pill flex-fill" onClick={() => handleConfirmDeliveryDemo(order.id)}>
+                                                                        Confirm Delivery
+                                                                    </button>
+                                                                    <button className="btn btn-outline-warning btn-sm rounded-pill flex-fill" onClick={() => toast('Payment processed (demo)', 'success')}>
+                                                                        Proceed with Payment
+                                                                    </button>
+                                                                </>
                                                             )}
-                                                            {order.status === 'Waiting to be sent' && (
-                                                                <button className="btn btn-primary btn-sm rounded-pill flex-fill" onClick={() => handleAcceptReservationDemo(order.id)}>Accept Reservation</button>
-                                                            )}
-                                                            <button className="btn btn-danger btn-sm rounded-pill flex-fill" onClick={() => handleCancelReservationDemo(order.id)}>Cancel</button>
                                                         </>
                                                     )}
 
