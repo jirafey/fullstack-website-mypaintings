@@ -17,6 +17,7 @@ const DEMO_ARTWORKS = [
     artistId: 101,
     price: '$1,200',
     likes: 12,
+    liked: true,
     image_url: 'https://picsum.photos/400/400?random=1',
     description: 'A beautiful abstract painting full of color and movement.'
   },
@@ -28,6 +29,7 @@ const DEMO_ARTWORKS = [
     artistId: 102,
     price: '$800',
     likes: 8,
+    liked: false,
     image_url: 'https://picsum.photos/400/400?random=2',
     description: 'Inspired by the sea and its endless energy.'
   },
@@ -39,6 +41,7 @@ const DEMO_ARTWORKS = [
     artistId: 103,
     price: '$1,500',
     likes: 20,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=3',
   },
   {
@@ -49,6 +52,7 @@ const DEMO_ARTWORKS = [
     artistId: 104,
     price: '$950',
     likes: 5,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=4',
   },
   {
@@ -59,6 +63,7 @@ const DEMO_ARTWORKS = [
     artistId: 105,
     price: '$2,000',
     likes: 17,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=5',
   },
   {
@@ -69,6 +74,7 @@ const DEMO_ARTWORKS = [
     artistId: 106,
     price: '$1,100',
     likes: 6,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=6',
   },
   {
@@ -79,6 +85,7 @@ const DEMO_ARTWORKS = [
     artistId: 107,
     price: '$990',
     likes: 14,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=7',
   },
   {
@@ -89,6 +96,7 @@ const DEMO_ARTWORKS = [
     artistId: 108,
     price: '$1,450',
     likes: 11,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=8',
   },
   {
@@ -99,6 +107,7 @@ const DEMO_ARTWORKS = [
     artistId: 109,
     price: '$1,200',
     likes: 9,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=9',
   },
   {
@@ -109,6 +118,7 @@ const DEMO_ARTWORKS = [
     artistId: 110,
     price: '$1,600',
     likes: 18,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=10',
   },
   {
@@ -119,6 +129,7 @@ const DEMO_ARTWORKS = [
     artistId: 111,
     price: '$1,300',
     likes: 7,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=11',
   },
   {
@@ -129,6 +140,7 @@ const DEMO_ARTWORKS = [
     artistId: 112,
     price: '$1,250',
     likes: 5,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=12',
   },
   {
@@ -139,6 +151,7 @@ const DEMO_ARTWORKS = [
     artistId: 113,
     price: '$980',
     likes: 15,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=13',
   },
   {
@@ -149,6 +162,7 @@ const DEMO_ARTWORKS = [
     artistId: 114,
     price: '$1,750',
     likes: 19,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=14',
   },
   {
@@ -159,6 +173,7 @@ const DEMO_ARTWORKS = [
     artistId: 115,
     price: '$1,380',
     likes: 13,
+    liked: false,
     image_url: 'https://picsum.photos/300/300?random=15',
   },
 ];
@@ -179,15 +194,25 @@ function HotelFeed() {
     }
     setLoading(true);
     apiRequest('/artysta/wszystkiedziela')
-      .then(data => setArtworks(data?.dziela || []))
-      .catch(err => toast('Błąd pobierania dzieł: ' + err.message, 'danger'))
-      .finally(() => setLoading(false));
-  }, [demoMode, toast]);
+        .then(data => setArtworks(data?.dziela || []))
+        .catch(err => toast('Błąd pobierania dzieł: ' + err.message, 'danger'))
+        .finally(() => setLoading(false));
+  }, [demoMode]); // 🔥 usuń "toast"
+
 
   // Demo actions
   const handleLikeDemo = (id) => {
-    setArtworks(arts => arts.map(a => a.id === id ? { ...a, likes: (a.likes || 0) + 1 } : a));
-    toast('Liked artwork.', 'success');
+    setArtworks(arts =>
+        arts.map(a =>
+            a.id === id
+                ? {
+                  ...a,
+                  liked: !a.liked,
+                  likes: a.liked ? a.likes - 1 : a.likes + 1
+                }
+                : a
+        )
+    );
   };
   const handleReserveDemo = (id) => {
     toast('Artwork reserved!', 'success');
@@ -200,7 +225,7 @@ function HotelFeed() {
     toast('Artwork deleted.', 'warning');
   };
   const handleInsertDemo = () => {
-    const newId = Math.max(...artworks.map(a => a.id)) + 1;
+    const newId = artworks.length > 0 ? Math.max(...artworks.map(a => a.id)) + 1 : 1;
     const newArt = {
       id: newId,
       title: 'New Artwork ' + newId,
@@ -209,12 +234,16 @@ function HotelFeed() {
       artistId: 999,
       price: '$999',
       likes: 0,
+      liked: false,
       image_url: `https://picsum.photos/400/400?random=${newId}`,
       description: 'A new demo artwork.'
     };
     setArtworks([newArt, ...artworks]);
     toast('Artwork inserted.', 'info');
   };
+
+
+
 
   // Real API actions (no-op for now, can be implemented as needed)
   const handleLike = async (id) => {
@@ -257,7 +286,7 @@ function HotelFeed() {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="fw-bold">Gallery</h2>
-        {demoMode && <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Artwork</button>}
+        {demoMode && <button className="demo-button" onClick={handleInsertDemo}></button>}
       </div>
       <div className="row g-4 hotel-feed-grid">
         {artworks.map(art => (
@@ -290,13 +319,19 @@ function HotelFeed() {
                   <span className="ms-auto text-muted small"><i className="bi bi-heart-fill text-danger me-1"></i>{art.likes || 0}</span>
                 </div>
                 <div className="mt-auto d-flex gap-2">
-                  <button className="btn btn-outline-primary btn-sm flex-fill" onClick={() => handleLikeDemo(art.id)}><i className="bi bi-heart"></i> Like</button>
+                  <button
+                      className={`btn btn-sm flex-fill ${art.liked ? 'btn-primary' : 'btn-outline-primary'}`}
+                      onClick={() => handleLikeDemo(art.id)}
+                  >
+                    <i className="bi bi-heart${art.liked ? '-fill' : ''} me-1"></i>
+                    {art.liked ? 'Liked' : 'Like'}
+                  </button>
+
                   <button className="btn btn-outline-success btn-sm flex-fill" onClick={() => handleReserveDemo(art.id)}><i className="bi bi-cart-plus"></i> Reserve</button>
                 </div>
                 <div className="d-flex gap-2 mt-2">
                   <button className="btn btn-outline-secondary btn-sm flex-fill" onClick={() => handleDMDemo(art.artistId)}><i className="bi bi-chat-dots"></i> DM</button>
-                  {demoMode && <button className="btn btn-outline-danger btn-sm flex-fill" onClick={() => handleDeleteDemo(art.id)}><i className="bi bi-trash"></i> Delete</button>}
-                </div>
+                 </div>
               </div>
             </div>
           </div>
