@@ -1,0 +1,96 @@
+/* MySales.css */
+
+/* --- Style ogólne (spójne z MyArtwork.css) --- */
+.my-sales-page {
+    font-family: 'Abel', sans-serif;
+    background-color: #eeeeee;
+    letter-spacing: normal;
+    min-height: 100vh;
+    padding-top: 20px;
+}
+
+.page-title {
+    font-family: 'Abel', sans-serif;
+    font-weight: 400 !important;
+    background-color: transparent;
+    color: #181818;
+    display: inline-block;
+    border-radius: 4px;
+    margin-top: 1.5rem;
+}
+
+/* --- Karty sprzedaży --- */
+.sale-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+    width: 75%;
+}
+
+.sale-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sale-card p {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.sale-card p strong {
+    color: #555;
+}
+
+
+.sale-buttons {
+    margin-top: 10px;
+}
+
+/* Przycisk Insert Sale */
+.insert-button {
+    border-color: #349CE5;
+    background-color: #349CE5;
+    color: white;
+}
+
+.insert-button:hover {
+    background-color: #2a8cd1;
+    border-color: #2a8cd1;
+    color: white;
+}
+
+/* Obrazek w karcie */
+.sale-card img {
+    border: 1px solid #dee2e6;
+    max-height: 150px;
+    object-fit: cover;
+}
+
+.demo-button{
+    border-color: #349CE5;
+}
+
+/* --- RWD: Poprawki dla małych ekranów --- */
+@media (max-width: 767.98px) {
+    .sale-card .row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sale-card img {
+        width: 60%;
+        margin-bottom: 1rem;
+    }
+
+    .sale-card .col-md-8 {
+        text-align: center;
+    }
+
+    .sale-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}

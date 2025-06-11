@@ -22,109 +22,12 @@ import ContactPage from './ContactPage';
 import FAQPage from './FAQPage';
 import AboutUsPage from './AboutUsPage';
 import TermsOfUsePage from './TermsOfUsePage';
+import MySales from './MySales';
 
 import './App.css';
 // Bootstrap i ikony importowane w index.js
 
 // Placeholdery dla pozostałych stron
-function MySales() {
-  const { demoMode } = useDemoMode();
-  const [sales, setSales] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const toast = useToast();
-
-  // Demo sales data
-  const DEMO_SALES = [
-    { id: 1, sold_on: '2024-05-01', price: '$1,200', buyer: 'Grand Hotel', status: 'Delivered', image_url: 'https://picsum.photos/300/300?random=61' },
-    { id: 2, sold_on: '2024-04-15', price: '$800', buyer: 'Seaside Resort', status: 'In transit', image_url: 'https://picsum.photos/300/300?random=62' },
-    { id: 3, sold_on: '2024-03-20', price: '$1,500', buyer: 'Urban Inn', status: 'Awaiting pickup', image_url: 'https://picsum.photos/300/300?random=63' },
-    { id: 4, sold_on: '2024-02-10', price: '$950', buyer: 'Forest Lodge', status: 'Delivered', image_url: 'https://picsum.photos/300/300?random=64' },
-    { id: 5, sold_on: '2024-01-05', price: '$2,000', buyer: 'Sunset Suites', status: 'In transit', image_url: 'https://picsum.photos/300/300?random=65' },
-    { id: 6, sold_on: '2023-12-22', price: '$1,100', buyer: 'City Center Hotel', status: 'Awaiting pickup', image_url: 'https://picsum.photos/300/300?random=66' },
-    { id: 7, sold_on: '2023-11-30', price: '$1,800', buyer: 'Boulevard Hotel', status: 'Delivered', image_url: 'https://picsum.photos/300/300?random=67' },
-    { id: 8, sold_on: '2023-10-18', price: '$1,300', buyer: 'Blue Lagoon', status: 'In transit', image_url: 'https://picsum.photos/300/300?random=68' },
-    { id: 9, sold_on: '2023-09-05', price: '$1,600', buyer: 'Mountain Retreat', status: 'Awaiting pickup', image_url: 'https://picsum.photos/300/300?random=69' },
-    { id: 10, sold_on: '2023-08-12', price: '$1,400', buyer: 'Desert Oasis', status: 'Delivered', image_url: 'https://picsum.photos/300/300?random=70' },
-  ];
-
-  React.useEffect(() => {
-    if (demoMode) {
-      setSales(DEMO_SALES);
-      setLoading(false);
-      return;
-    }
-    // TODO: Replace with real API call
-    setSales([]);
-    setLoading(false);
-  }, [demoMode]);
-
-  // Demo actions
-  const handleConfirmDemo = (id) => {
-    setSales(sales => sales.map(s => s.id === id ? { ...s, status: 'Delivered' } : s));
-    toast('Sale confirmed (demo).', 'success');
-  };
-  const handleCancelDemo = (id) => {
-    setSales(sales => sales.filter(s => s.id !== id));
-    toast('Sale cancelled (demo).', 'info');
-  };
-  const handleInsertDemo = () => {
-    const newId = Math.max(...sales.map(s => s.id)) + 1;
-    const newSale = {
-      id: newId,
-      sold_on: new Date().toISOString().slice(0, 10),
-      price: '$999',
-      buyer: 'Demo Buyer',
-      status: 'In transit',
-      image_url: `https://picsum.photos/300/300?random=${60 + newId}`,
-    };
-    setSales([newSale, ...sales]);
-    toast('Sale inserted (demo).', 'info');
-  };
-
-  if (loading) return <div className="text-center py-5">Loading sales...</div>;
-
-  return (
-    <div className="container mt-4">
-      <h1 className="text-center mb-4 page-title">My Sales</h1>
-      {demoMode && (
-        <div className="mb-3 text-end">
-          <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Sale</button>
-        </div>
-      )}
-      <div className="row">
-        {sales.length === 0 ? (
-          <div className="alert alert-info">No sales yet.</div>
-        ) : (
-          sales.map(sale => (
-            <div className="col-md-6 mb-4" key={sale.id}>
-              <div className="order-item d-flex p-3 border rounded bg-white shadow-sm">
-                <div className="order-image me-3">
-                  <img src={sale.image_url} alt="Sale artwork" className="img-fluid rounded" style={{ width: '130px', height: '130px', objectFit: 'cover' }} />
-                </div>
-                <div className="order-details flex-grow-1">
-                  <p><strong>Sold on:</strong> {sale.sold_on}</p>
-                  <p><strong>Price:</strong> {sale.price}</p>
-                  <p><strong>Buyer:</strong> {sale.buyer}</p>
-                  <p><strong>Status:</strong> {sale.status}</p>
-                  {demoMode && (
-                    <>
-                      <button className="btn btn-success btn-sm mt-2 me-2" onClick={() => handleConfirmDemo(sale.id)}>
-                        Confirm delivery
-                      </button>
-                      <button className="btn btn-danger btn-sm mt-2" onClick={() => handleCancelDemo(sale.id)}>
-                        Cancel sale
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
 
 function Messages() { return <div className="container mt-4 placeholder-page"><h2 className="text-center">Messages Page</h2><p className='text-center text-muted'>(Placeholder)</p></div>; }
 
