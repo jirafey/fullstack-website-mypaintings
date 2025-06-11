@@ -126,7 +126,7 @@ function PaintingViewerPage() {
                 <div className="mb-2"><strong>Description:</strong><br /><span className="text-muted">{painting.description}</span></div>
               </div>
               <div className="col-md-6 d-flex flex-column align-items-end justify-content-end">
-                <button className="btn btn-success btn-lg rounded-pill px-4 mb-2" onClick={demoMode ? handleReserveDemo : handleReserve} disabled={reserving} style={{minWidth:180}}>{reserving ? 'Reserving...' : 'Reserve / Buy'}</button>
+                <button className="btn btn-success btn-lg rounded-pill px-4 mb-2" onClick={demoMode ? handleReserveDemo : handleReserve} disabled={reserving} style={{minWidth:180}}>{reserving ? 'Reserving...' : 'Reserve'}</button>
                 <button className="btn btn-outline-secondary btn-sm rounded-pill" onClick={() => navigate('/messages', { state: { userId: painting.artistId } })}><i className="bi bi-chat-dots me-1"></i> DM Artist</button>
               </div>
             </div>

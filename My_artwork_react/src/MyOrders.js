@@ -221,38 +221,44 @@ function MyOrders() {
 
         return (
             <div className="container py-4">
+                {demoMode && (
+                    <div className="mb-3 text-end">
+                        <button className="demo-button" onClick={handleInsertDemo}></button>
+                    </div>
+                )}
                 <div className="row justify-content-center">
                     <div className="col-lg-10">
                         <div className="card shadow-lg rounded-4 p-4 mb-4 orders-card">
                             <h2 className="mb-4 fw-bold">My Orders</h2>
-                            {demoMode && (
-                                <div className="mb-3 text-end">
-                                    <button className="btn btn-primary" onClick={handleInsertDemo}>Insert Order</button>
-                                </div>
-                            )}
                             <div className="row g-4">
                                 {orders.map(order => (
                                     <div key={order.id} className="col-md-6 col-lg-4">
                                         <div className="order-card rounded-4 shadow-sm">
                                             <img src={order.image_url || placeholderImg} alt="Order" className="order-image rounded-4" style={{ width: '100%', height: 200, objectFit: 'cover' }} />
+
                                             <div className="order-details p-3">
                                                 <div className="d-flex align-items-center mb-2">
-                                                    <img src={`https://randomuser.me/api/portraits/${order.id % 2 ? 'men' : 'women'}/${order.id % 70}.jpg`} alt={order.hotel} className="rounded-circle me-2" width={32} height={32} />
                                                     <div>
-                                                        <div className="fw-semibold">{order.hotel}</div>
-                                                        <div className="text-muted small">{order.bought_on}</div>
+                                                        <div className="text-muted"> From: {order.hotel}</div>
+                                                        <div className="text-muted">Bought on: {order.bought_on}</div>
+                                                        <div className="mb-2"><span className="text-muted">Price: {order.price}</span></div>
+                                                        <div className={`status-badge ${getStatusClass(order.status)} mb-4`}>{order.status}</div>
                                                     </div>
+
                                                 </div>
-                                                <div className="mb-2"><span className="badge bg-light text-dark">{order.price}</span></div>
-                                                <div className={`status-badge ${getStatusClass(order.status)} mb-3`}>{order.status}</div>
                                                 <div className="d-flex gap-2">
-                                                    {order.status === 'Waiting for payment' && (
-                                                        <button className="btn btn-success btn-sm rounded-pill flex-fill" onClick={() => handleConfirmDeliveryDemo(order.id)}>Confirm Delivery</button>
+                                                    {userType !== 'GOSC' && (
+                                                        <>
+                                                            {order.status === 'Waiting for payment' && (
+                                                                <button className="btn btn-success btn-sm rounded-pill flex-fill" onClick={() => handleConfirmDeliveryDemo(order.id)}>Confirm Delivery</button>
+                                                            )}
+                                                            {order.status === 'Waiting to be sent' && (
+                                                                <button className="btn btn-primary btn-sm rounded-pill flex-fill" onClick={() => handleAcceptReservationDemo(order.id)}>Accept Reservation</button>
+                                                            )}
+                                                            <button className="btn btn-danger btn-sm rounded-pill flex-fill" onClick={() => handleCancelReservationDemo(order.id)}>Cancel</button>
+                                                        </>
                                                     )}
-                                                    {order.status === 'Waiting to be sent' && (
-                                                        <button className="btn btn-primary btn-sm rounded-pill flex-fill" onClick={() => handleAcceptReservationDemo(order.id)}>Accept Reservation</button>
-                                                    )}
-                                                    <button className="btn btn-danger btn-sm rounded-pill flex-fill" onClick={() => handleCancelReservationDemo(order.id)}>Cancel</button>
+
                                                 </div>
                                             </div>
                                         </div>
