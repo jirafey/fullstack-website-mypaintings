@@ -264,8 +264,14 @@ function HotelFeed() {
           <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={art.id}>
             <div className="artwork-card shadow-sm rounded-4 h-100 d-flex flex-column">
               <div className="artwork-image-wrapper position-relative">
-                <img src={art.image_url || '/img.png'} alt={art.title || 'Artwork'} className="artwork-image rounded-4 w-100" style={{ aspectRatio: '1/1', objectFit: 'cover' }} />
-
+                <Link to={`/view-painting/${art.id}`}>
+                  <img
+                      src={art.image_url || '/img.png'}
+                      alt={art.title || 'Artwork'}
+                      className="artwork-image rounded-4 w-100"
+                      style={{ aspectRatio: '1/1', objectFit: 'cover' }}
+                  />
+                </Link>
                 <Link
                     to={`/profile/${art.artistId}`}
                     className="artwork-artist-mini"
